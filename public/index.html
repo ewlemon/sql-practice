@@ -415,9 +415,11 @@ const ALL_TOPICS = [
 
 // Topic pools per tier (cumulative)
 const TIER_POOLS = {
+  // Each tier picks topics that BELONG to that tier
+  // (topicRules allow lower-tier concepts in the SQL, but the topic taught is always tier-matched)
   basic:        ALL_TOPICS.filter(function(t) { return t.tier === 'basic'; }),
-  intermediate: ALL_TOPICS.filter(function(t) { return t.tier === 'basic' || t.tier === 'intermediate'; }),
-  advanced:     ALL_TOPICS,
+  intermediate: ALL_TOPICS.filter(function(t) { return t.tier === 'intermediate'; }),
+  advanced:     ALL_TOPICS.filter(function(t) { return t.tier === 'advanced'; }),
 };
 
 // Flat list for lookups
