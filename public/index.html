@@ -65,6 +65,8 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14
 .req-summary{font-size:12.5px;color:#8a9ab8;line-height:1.7;margin-bottom:12px}
 .req-list{margin:0 0 14px 16px;display:flex;flex-direction:column;gap:6px}
 .req-list li{font-size:12.5px;color:#b0bdd0;line-height:1.6}
+.req-section-label{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin:12px 0 5px}
+.req-example{font-family:var(--mono);font-size:11px;color:#b0bdd0;background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:8px 10px;white-space:pre-wrap;line-height:1.65}
 .req-divider{height:1px;background:var(--border);margin:12px 0}
 .req-submitter{font-size:11px;color:var(--muted);display:flex;flex-direction:column;gap:3px}
 .req-submitter span{color:var(--text);font-weight:500}
@@ -522,20 +524,25 @@ async function generateQuestion() {
   }).join(' | ');
 
   const prompt =
-    'Generate a SQL business request. DB: ' + dataset.name + ' (' + dataset.industry + '). ' +
+    'Generate a SQL practice problem in LeetCode style. DB: ' + dataset.name + ' (' + dataset.industry + '). ' +
     'Schema: ' + schemaDesc + '. Topic: ' + topic + '. Difficulty: ' + difficulty + ' (' + diffDesc + ').\n' +
     'Respond ONLY with JSON:\n' +
-    '{"title":"4-7 word title","submitted_by":"Name, Title","summary":"one sentence business context",' +
-    '"requirements":["requirement referencing real column/table names","requirement 2","requirement 3"],' +
+    '{"title":"4-7 word title","submitted_by":"Name, Job Title",' +
+    '"description":"2-3 plain sentences describing the business scenario and exactly what the query must return. Write like a LeetCode problem — clear and direct. Reference actual table and column names.",' +
+    '"example_input":"A short plain-text description of the relevant sample rows from the schema that the example is based on. Keep it to 2-4 rows per table, only show relevant columns.",' +
+    '"example_output":"The exact columns and 2-4 rows the correct query would return for the example input above. Format as a plain text table with column headers separated by | and rows on new lines.",' +
+    '"constraints":["Any specific requirements — e.g. order results by X descending","Exclude NULL values in column Y","Only include rows where status = active"],' +
     '"output_description":"one sentence on expected output columns",' +
     '"hints":["vague nudge","more specific hint about approach","near-answer hint"]}\n' +
     'Rules:\n' +
-    '- Requirements must reference actual column and table names from the schema\n' +
-    '- Frame as a real business need — do NOT mention SQL, CTEs, or window functions\n' +
-    '- The difficulty restriction is ABSOLUTE — do not add concepts beyond what is allowed for this difficulty\n' +
-    '- Easy: the correct answer must be solvable with a single SELECT statement and basic clauses only\n' +
-    '- Medium: may require subqueries or multiple aggregates but NO CTEs or window functions\n' +
-    '- Hard: the correct answer must require a CTE or window function to solve correctly';
+    '- description must reference actual column and table names from the schema\n' +
+    '- example_input and example_output must be consistent with each other and with the schema sample data\n' +
+    '- constraints must be specific and reference real column names\n' +
+    '- Do not mention SQL syntax, CTEs, or window functions anywhere\n' +
+    '- The difficulty restriction is ABSOLUTE\n' +
+    '- Easy: solvable with a single SELECT, basic clauses only, no CTEs or window functions\n' +
+    '- Medium: may use subqueries or multiple aggregates, no CTEs or window functions\n' +
+    '- Hard: must require a CTE or window function to solve correctly';
 
   try {
     question = await callClaude(prompt, 700);
@@ -673,12 +680,17 @@ function updateHintBtn() {
 // ── Render functions ──────────────────────────────────────────────────────────
 function renderProblem() {
   if (!question) return;
-  const reqs = (question.requirements || []).map(function(r) { return '<li>' + esc(r) + '</li>'; }).join('');
+  const constraints = (question.constraints || [])
+    .map(function(c) { return '<li>' + esc(c) + '</li>'; }).join('');
   document.getElementById('tab-problem').innerHTML =
     '<div class="req-from">Request #' + qNum + '</div>' +
     '<div class="req-title">' + esc(question.title) + '</div>' +
-    '<div class="req-summary">' + esc(question.summary || '') + '</div>' +
-    '<ul class="req-list">' + reqs + '</ul>' +
+    '<div class="req-summary">' + esc(question.description || question.summary || '') + '</div>' +
+    (constraints ? '<div class="req-section-label">Constraints</div><ul class="req-list">' + constraints + '</ul>' : '') +
+    '<div class="req-section-label">Example input</div>' +
+    '<div class="req-example">' + esc(question.example_input || '') + '</div>' +
+    '<div class="req-section-label">Expected output</div>' +
+    '<div class="req-example">' + esc(question.example_output || '') + '</div>' +
     '<div class="req-divider"></div>' +
     '<div class="req-submitter"><div>Submitted by</div><span>' + esc(question.submitted_by) + '</span></div>';
 }
