@@ -28,14 +28,12 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14
 .sep{width:1px;height:20px;background:var(--border);flex-shrink:0}
 .dialect-select{font-family:var(--mono);font-size:11px;background:var(--surface2);border:1px solid var(--border2);border-radius:5px;color:var(--text);padding:4px 8px;cursor:pointer;outline:none}
 .dataset-pill{font-size:11px;font-family:var(--mono);color:var(--muted);background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:3px 10px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.cat-selector{display:flex;align-items:center;gap:8px;flex:1;min-width:0;overflow:hidden}
+.cat-selector{display:flex;align-items:center;gap:8px;flex-shrink:0}
 .cat-label{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);white-space:nowrap;flex-shrink:0}
-.cat-pills{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;flex-wrap:nowrap}
-.cat-pills::-webkit-scrollbar{display:none}
-.cat-pill{font-family:var(--sans);font-size:11px;font-weight:500;padding:3px 10px;border-radius:12px;border:1px solid var(--border2);background:transparent;color:var(--muted);cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0}
-.cat-pill:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-bg)}
-.cat-pill.active{border-color:var(--purple);color:var(--purple);background:var(--purple-bg)}
-.level-badge{font-size:11px;font-family:var(--mono);font-weight:600;padding:3px 10px;border-radius:10px;background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple);white-space:nowrap}
+.cat-dropdown{font-family:var(--sans);font-size:12px;font-weight:500;background:var(--surface2);border:1px solid var(--border2);border-radius:5px;color:var(--text);padding:4px 8px;cursor:pointer;outline:none;min-width:180px;transition:border-color .15s}
+.cat-dropdown:focus{border-color:var(--purple)}
+.cat-dropdown option{background:var(--surface2)}
+
 .hdr-right{display:flex;align-items:center;gap:6px;margin-left:auto}
 
 .btn{font-family:var(--sans);font-size:12px;font-weight:500;padding:5px 12px;border-radius:5px;border:1px solid;cursor:pointer;transition:all .15s;white-space:nowrap}
@@ -171,17 +169,7 @@ table.rt tr:nth-child(even) td{background:var(--surface2)}
 .diff-pop-label.hard{color:var(--red)}
 .diff-pop-desc{font-size:11.5px;color:var(--muted);line-height:1.6}
 
-/* SQL Reference bottom bar */
-.ref-bar{border-top:1px solid var(--border2);background:var(--surface);flex-shrink:0;display:flex;flex-direction:column;max-height:200px}
-.ref-bar-top{display:flex;align-items:center;gap:10px;padding:7px 14px;border-bottom:1px solid var(--border);flex-shrink:0}
-.ref-bar-label{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);white-space:nowrap}
-.ref-cat-select{flex:1;font-family:var(--sans);font-size:11px;background:var(--surface2);border:1px solid var(--border2);border-radius:5px;color:var(--text);padding:4px 7px;cursor:pointer;outline:none}
-.ref-cat-select:focus{border-color:var(--blue)}
-.ref-content{overflow-y:auto;padding:4px 14px 8px;scrollbar-width:thin;scrollbar-color:var(--border2) transparent}
-.ref-row{display:flex;gap:10px;align-items:baseline;padding:4px 0;border-bottom:1px solid rgba(35,45,69,.4)}
-.ref-row:last-child{border-bottom:none}
-.ref-kw{font-family:var(--mono);font-size:10.5px;color:var(--blue);min-width:150px;flex-shrink:0;line-height:1.5}
-.ref-desc{font-size:11px;color:var(--muted);line-height:1.5}
+
 
 /* Feedback pane */
 .feedback-pane{border-top:2px solid var(--border2);background:var(--surface2);flex-shrink:0;max-height:220px;display:flex;flex-direction:column;overflow:hidden}
@@ -196,12 +184,8 @@ table.rt tr:nth-child(even) td{background:var(--surface2)}
 .resize-handle::after{content:'';display:block;width:30px;height:3px;border-top:1px solid var(--border2);border-bottom:1px solid var(--border2);margin:1px auto 0}
 
 /* Learn popover */
-.learn-popover{display:none;position:absolute;top:36px;right:0;z-index:100;background:var(--surface2);border:1px solid var(--border2);border-radius:8px;padding:14px 16px;width:300px;box-shadow:0 8px 32px rgba(0,0,0,.5)}
-.learn-popover.open{display:block}
-.learn-cats{display:flex;flex-direction:column;gap:5px}
-.learn-cat-btn{font-family:var(--sans);font-size:12px;font-weight:500;padding:7px 12px;border-radius:6px;border:1px solid var(--border2);background:transparent;color:var(--text);cursor:pointer;text-align:left;transition:all .15s;display:flex;align-items:center;gap:8px}
-.learn-cat-btn:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-bg)}
-.learn-cat-btn .cat-icon{font-size:13px;width:18px;text-align:center}
+
+
 .learn-mode-badge{font-size:10px;font-family:var(--mono);padding:2px 7px;border-radius:10px;background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple);margin-left:6px}
 
 /* Learning guidance in feedback pane */
@@ -221,9 +205,6 @@ table.rt tr:nth-child(even) td{background:var(--surface2)}
 .concept-syntax{font-family:var(--mono);font-size:11px;color:var(--text);background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:9px 11px;white-space:pre-wrap;line-height:1.65}
 .concept-tip{font-size:11.5px;color:var(--amber);background:var(--amber-bg);border:1px solid rgba(245,166,35,.2);border-radius:5px;padding:7px 10px;margin-top:8px;line-height:1.5}
 .concept-tip::before{content:"Tip: ";font-weight:600}
-.level-progress{display:flex;align-items:center;gap:6px;margin-top:10px}
-.level-pip{width:16px;height:4px;border-radius:2px;background:var(--border2)}
-.level-pip.filled{background:var(--purple)}
 
 /* Output verdict and hints */
 .out-verdict-pill{font-size:10px;font-family:var(--mono);font-weight:600;padding:2px 9px;border-radius:10px;border:1px solid;margin-left:8px}
@@ -235,6 +216,36 @@ table.rt tr:nth-child(even) td{background:var(--surface2)}
 .out-hint-row::before{content:"→";color:var(--amber);flex-shrink:0;font-size:10px}
 .run-btn-incorrect{background:transparent;border-color:var(--red);color:var(--red)}
 .run-btn-close{background:transparent;border-color:var(--amber);color:var(--amber)}
+
+/* Ref popover */
+.ref-popover .ref-section{margin-bottom:14px}
+.ref-popover .ref-section-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid var(--border)}
+.ref-popover .ref-row{display:flex;gap:8px;align-items:baseline;padding:3px 0;border-bottom:1px solid rgba(35,45,69,.3)}
+.ref-popover .ref-row:last-child{border-bottom:none}
+.ref-popover .ref-kw{font-family:var(--mono);font-size:10px;color:var(--blue);min-width:130px;flex-shrink:0;line-height:1.5}
+.ref-popover .ref-desc{font-size:10.5px;color:var(--muted);line-height:1.5}
+
+/* Header popover buttons (Reference, Concept guide) */
+.hdr-popover-btn{font-family:var(--sans);font-size:11px;font-weight:500;padding:4px 10px;border-radius:5px;border:1px solid var(--border2);background:transparent;color:var(--muted);cursor:pointer;transition:all .15s;white-space:nowrap}
+.hdr-popover-btn:hover:not(:disabled){border-color:var(--purple);color:var(--purple);background:var(--purple-bg)}
+.hdr-popover-btn:disabled{opacity:.4;cursor:not-allowed}
+.hdr-popover-btn.active{border-color:var(--purple);color:var(--purple);background:var(--purple-bg)}
+.hdr-popover{scrollbar-width:thin;scrollbar-color:var(--border2) transparent}
+
+/* Vertical resize handle (between left and right panels) */
+.vert-resize-handle{width:5px;background:var(--border);cursor:col-resize;flex-shrink:0;transition:background .15s;position:relative;z-index:5}
+.vert-resize-handle:hover,.vert-resize-handle.v-dragging{background:var(--blue)}
+.vert-resize-handle::after{content:'';display:block;width:3px;height:24px;border-left:1px solid var(--border2);border-right:1px solid var(--border2);position:absolute;top:50%;left:1px;transform:translateY(-50%)}
+
+
+/* Explain area in output pane */
+.explain-section{border-top:1px solid var(--border);padding:10px 12px;background:var(--surface2)}
+.explain-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--teal);margin-bottom:8px}
+.explain-line{display:flex;gap:10px;padding:6px 0;border-bottom:1px solid rgba(35,45,69,.4);align-items:flex-start}
+.explain-line:last-child{border-bottom:none}
+.explain-sql{font-family:var(--mono);font-size:10.5px;color:var(--blue);min-width:180px;flex-shrink:0;line-height:1.5;padding-top:1px}
+.explain-desc{font-size:11.5px;color:#b0bdd0;line-height:1.6}
+.explain-loading{font-size:12px;color:var(--muted);font-style:italic;padding:8px 0;display:flex;align-items:center;gap:8px}
 </style>
 </head>
 <body>
@@ -243,11 +254,13 @@ table.rt tr:nth-child(even) td{background:var(--surface2)}
   <div class="logo">SQL<span>.learn</span></div>
   <div class="sep"></div>
   <select class="dialect-select" id="dialect-select" onchange="setDialect(this.value)">
-    <option value="tsql">T-SQL</option>
+    <option value="tsql">T-SQL (SQL Server)</option>
     <option value="mysql">MySQL</option>
     <option value="postgres">PostgreSQL</option>
     <option value="sqlite">SQLite</option>
     <option value="spark">Spark SQL</option>
+    <option value="oracle">Oracle SQL</option>
+    <option value="bigquery">BigQuery</option>
   </select>
   <div class="sep"></div>
   <div style="position:relative;display:flex;align-items:center;gap:5px">
@@ -258,47 +271,33 @@ table.rt tr:nth-child(even) td{background:var(--surface2)}
   <!-- Category selector -->
   <div class="cat-selector" id="cat-selector">
     <span class="cat-label">Topic:</span>
-    <div class="cat-pills" id="cat-pills"></div>
+    <select class="cat-dropdown" id="cat-dropdown" onchange="selectCategory(this.value)">
+      <option value="">Select a topic...</option>
+    </select>
+    <div style="position:relative">
+      <button class="hdr-popover-btn" id="guide-btn" onclick="toggleGuidePopover(event)" disabled>Guide</button>
+      <div class="diff-popover hdr-popover" id="guide-popover" style="top:36px;left:0;transform:none;width:460px;max-height:500px;overflow-y:auto;padding:0"></div>
+    </div>
   </div>
   <div class="hdr-right">
-    <div class="level-badge" id="level-badge" style="display:none">Level <span id="level-num">1</span></div>
     <button class="btn btn-blue" id="new-q-btn" onclick="newQuestion()" disabled>Next question</button>
   </div>
 </div>
 
 <div class="main">
   <!-- LEFT -->
-  <div class="left">
+  <div class="left" id="left-panel">
     <div class="tabs">
       <div class="tab active" onclick="switchTab('problem')">Request</div>
     </div>
     <div class="panel active" id="tab-problem">
-      <div class="empty"><div class="empty-icon">&#128218;</div><div>Select a topic above to begin learning.</div><div style="font-size:11px;color:var(--dim);margin-top:8px">Questions get progressively harder as you advance through each topic.</div></div>
+      <div class="empty"><div class="empty-icon">&#128218;</div><div>Select a topic above to begin learning.</div><div style="font-size:11px;color:var(--dim);margin-top:8px">Basic draws from basic topics. Intermediate adds joins and grouping. Advanced includes CTEs and window functions.</div></div>
     </div>
-    <!-- SQL Reference dropdown at bottom -->
-    <div class="ref-bar">
-      <div class="ref-bar-top">
-        <span class="ref-bar-label">SQL Reference</span>
-        <select class="ref-cat-select" id="ref-cat-select" onchange="renderRefCategory(this.value)">
-          <option value="">Select a category...</option>
-          <option value="querying">Querying data</option>
-          <option value="joins">Joins</option>
-          <option value="aggregation">Aggregation</option>
-          <option value="ctes">CTEs</option>
-          <option value="window">Window functions</option>
-          <option value="nulls">NULL handling</option>
-          <option value="case">CASE expressions</option>
-          <option value="strings">String functions</option>
-          <option value="dates">Date functions</option>
-          <option value="types">Type conversion</option>
-          <option value="sets">Set operations</option>
-          <option value="perf">Performance</option>
-        </select>
-      </div>
-      <div class="ref-content" id="ref-content"></div>
-    </div>
+
   </div>
 
+  <!-- VERTICAL RESIZE -->
+  <div class="vert-resize-handle" id="vert-resize-handle"></div>
   <!-- RIGHT -->
   <div class="right">
     <div class="editor-hdr">
@@ -306,6 +305,7 @@ table.rt tr:nth-child(even) td{background:var(--surface2)}
       <div class="editor-btns">
         <button class="btn btn-ghost" onclick="clearEditor()">Clear</button>
         <button class="btn btn-ghost" id="showme-btn" onclick="showMeAnswer()" disabled>Show me</button>
+        <button class="btn btn-ghost" id="explain-btn" onclick="explainQuery()" disabled style="display:none">Explain &#10140;</button>
         <button class="btn btn-teal"  id="run-btn"    onclick="runQuery()"     disabled>Run &#9654;</button>
       </div>
     </div>
@@ -336,6 +336,7 @@ table.rt tr:nth-child(even) td{background:var(--surface2)}
         <div class="empty-output">Run a query to see results here.</div>
       </div>
       <div id="out-hints-area" style="display:none"></div>
+      <div id="out-explain-area" style="display:none"></div>
     </div>
 
     <!-- Feedback panel — correctness, hints, model answer -->
@@ -361,7 +362,7 @@ table.rt tr:nth-child(even) td{background:var(--surface2)}
 </div>
 
 <script>
-const API = 'https://api.anthropic.com/v1/messages';
+const API = '/api/claude';
 const MODEL = 'claude-sonnet-4-20250514';
 
 let dataset = null;
@@ -372,10 +373,10 @@ let hintShown = 0;
 let qNum = 0;
 let isRunning = false, isGenerating = false;
 let lastCorrect = false;
-let currentCategory = null;   // active learning category key
-let categoryLevel = {};        // { categoryKey: levelNumber }
+let currentCategory = null;   // active tier: 'basic'|'intermediate'|'advanced'
+let currentTopicKey = null;    // key of the specific topic for this question
 
-const DIALECTS = { tsql:'T-SQL (SQL Server)', mysql:'MySQL', postgres:'PostgreSQL', sqlite:'SQLite', spark:'Spark SQL' };
+const DIALECTS = { tsql:'T-SQL (SQL Server)', mysql:'MySQL', postgres:'PostgreSQL', sqlite:'SQLite', spark:'Spark SQL', oracle:'Oracle SQL', bigquery:'BigQuery SQL' };
 
 const DATASET_CONTEXTS = [
   { industry:'Healthcare',         desc:'Regional hospital with admissions, billing and staff data' },
@@ -388,20 +389,128 @@ const DATASET_CONTEXTS = [
   { industry:'Telecom',            desc:'Telecom provider with customers, plans and usage data' },
 ];
 
-// ── Learning categories ───────────────────────────────────────────────────────
-const CATEGORIES = [
-  { key:'select',   label:'SELECT & WHERE',     icon:'▦' },
-  { key:'joins',    label:'JOINs',              icon:'⇌' },
-  { key:'groupby',  label:'GROUP BY',           icon:'∑' },
-  { key:'subquery', label:'Subqueries',         icon:'⊂' },
-  { key:'case',     label:'CASE & COALESCE',    icon:'?' },
-  { key:'cte',      label:'CTEs',               icon:'⧉' },
-  { key:'window',   label:'Window functions',   icon:'⊞' },
-  { key:'lag_lead', label:'LAG & LEAD',         icon:'↔' },
-  { key:'running',  label:'Running totals',     icon:'⊕' },
-  { key:'dates',    label:'Date functions',     icon:'📅'},
-  { key:'strings',  label:'String functions',   icon:'Aa' },
+// group: label, items: [{key, label, icon}]
+// All individual topics with their metadata
+const ALL_TOPICS = [
+  // Basic — single-table, foundational clauses
+  { key:'select',   label:'SELECT & WHERE',         icon:'▦', tier:'basic'        },
+  { key:'sorting',  label:'ORDER BY & TOP',         icon:'↕', tier:'basic'        },
+  { key:'nulls',    label:'NULL Handling',          icon:'∅', tier:'basic'        },
+  { key:'strings',  label:'String functions',       icon:'Aa',tier:'basic'        },
+  { key:'dates',    label:'Date functions',         icon:'📅',tier:'basic'        },
+  { key:'typeconv', label:'Type Conversion',        icon:'⇄', tier:'basic'        },
+  // Intermediate — multi-table, grouping, logic, sets
+  { key:'joins',    label:'JOINs',                  icon:'⇌', tier:'intermediate' },
+  { key:'groupby',  label:'GROUP BY & HAVING',      icon:'∑', tier:'intermediate' },
+  { key:'having',   label:'Aggregation & Filters',  icon:'⊞', tier:'intermediate' },
+  { key:'case',     label:'CASE & COALESCE',        icon:'?', tier:'intermediate' },
+  { key:'setops',   label:'UNION & Set Ops',        icon:'∪', tier:'intermediate' },
+  { key:'subquery', label:'Subqueries',             icon:'⊂', tier:'intermediate' },
+  // Advanced — CTEs, window functions, analytical
+  { key:'cte',      label:'CTEs',                   icon:'⧉', tier:'advanced'    },
+  { key:'window',   label:'Window functions',       icon:'⊡', tier:'advanced'    },
+  { key:'lag_lead', label:'LAG & LEAD',             icon:'↔', tier:'advanced'    },
+  { key:'running',  label:'Running totals',         icon:'⊕', tier:'advanced'    },
 ];
+
+// Topic pools per tier (cumulative)
+const TIER_POOLS = {
+  basic:        ALL_TOPICS.filter(function(t) { return t.tier === 'basic'; }),
+  intermediate: ALL_TOPICS.filter(function(t) { return t.tier === 'basic' || t.tier === 'intermediate'; }),
+  advanced:     ALL_TOPICS,
+};
+
+// Flat list for lookups
+const CATEGORIES = ALL_TOPICS;
+// CATEGORY_GROUPS kept for dropdown rendering
+const CATEGORY_GROUPS = [
+  { group: 'Basic SQL',        tier: 'basic',        desc: 'Single-table queries — filtering, sorting, strings, dates' },
+  { group: 'Intermediate SQL', tier: 'intermediate', desc: 'JOINs, grouping, CASE logic, subqueries, set operations'    },
+  { group: 'Advanced SQL',     tier: 'advanced',     desc: 'CTEs, window functions, LAG/LEAD, running totals'           },
+];
+
+
+// Topic rules — cascading: each topic may build on concepts from earlier topics.
+// Order: select < sorting < joins < nulls < strings < dates < typeconv
+//      < groupby < having < case < setops < subquery
+//      < cte < window < lag_lead < running
+const topicRules = {
+  select:
+    'ONLY: SELECT, FROM, WHERE (=, >, <, >=, <=, <>, BETWEEN, IN, LIKE, IS NULL, IS NOT NULL). ' +
+    'STRICTLY FORBIDDEN: ORDER BY (sorting is the NEXT topic), TOP/LIMIT, JOINs of any kind, aggregates (COUNT/SUM/AVG/MIN/MAX), GROUP BY, HAVING, subqueries, CASE, CTEs, window functions, UNION. ' +
+    'The business scenario must NOT mention sorting, ranking, or ordering results.',
+
+  sorting:
+    'ONLY: SELECT, FROM, simple WHERE conditions, ORDER BY with multiple columns ASC/DESC, TOP N / LIMIT, OFFSET/FETCH. ' +
+    'FORBIDDEN: JOINs, aggregates, GROUP BY, HAVING, subqueries, CTEs, window functions.',
+
+  joins:
+    'MUST use at least one JOIN (INNER or LEFT). May use WHERE and ORDER BY from earlier topics. ' +
+    'FORBIDDEN: aggregates, GROUP BY, HAVING, subqueries, CTEs, window functions, UNION.',
+
+  nulls:
+    'MUST use IS NULL, IS NOT NULL, COALESCE, ISNULL, or NULLIF. May use SELECT, WHERE, ORDER BY, and simple JOINs. ' +
+    'FORBIDDEN: GROUP BY, HAVING, subqueries, CTEs, window functions.',
+
+  strings:
+    'MUST use at least one string function: LEN, LEFT, RIGHT, SUBSTRING, UPPER, LOWER, TRIM, CONCAT, REPLACE, CHARINDEX. ' +
+    'May use SELECT, WHERE, ORDER BY, and JOINs. ' +
+    'FORBIDDEN: GROUP BY, HAVING, subqueries, CTEs, window functions.',
+
+  dates:
+    'MUST use at least two date functions: DATEDIFF, DATEADD, YEAR/MONTH/DAY, EOMONTH, DATEFROMPARTS, CAST(x AS DATE), GETDATE(). ' +
+    'May use SELECT, WHERE, ORDER BY, and JOINs. ' +
+    'FORBIDDEN: GROUP BY, HAVING, subqueries, CTEs, window functions.',
+
+  typeconv:
+    'MUST use CAST or TRY_CAST. Demonstrate where type conversion matters (integer division, safe cast). ' +
+    'May use SELECT, WHERE, ORDER BY, JOINs, string functions, date functions. ' +
+    'FORBIDDEN: GROUP BY, HAVING, subqueries, CTEs, window functions.',
+
+  groupby:
+    'MUST use GROUP BY with at least one aggregate: COUNT, SUM, AVG, MIN, MAX. ' +
+    'May use one JOIN, WHERE, ORDER BY, and any Basic SQL concepts. ' +
+    'FORBIDDEN: HAVING, subqueries, CTEs, window functions, UNION.',
+
+  having:
+    'MUST use GROUP BY + HAVING to filter groups. May use SUM(CASE WHEN...) for conditional aggregation. ' +
+    'May use JOINs, WHERE, ORDER BY, and any Basic SQL concepts. ' +
+    'FORBIDDEN: subqueries, CTEs, window functions, UNION.',
+
+  case:
+    'MUST use CASE WHEN...THEN...ELSE...END. May also use COALESCE, NULLIF, IIF. ' +
+    'May use any Basic SQL concept plus GROUP BY and HAVING. ' +
+    'FORBIDDEN: subqueries, CTEs, window functions.',
+
+  setops:
+    'MUST use UNION, UNION ALL, INTERSECT, or EXCEPT. Each SELECT may use Basic SQL, JOINs, GROUP BY, HAVING, or CASE. ' +
+    'FORBIDDEN: subqueries, CTEs, window functions.',
+
+  subquery:
+    'MUST use a subquery in WHERE (IN, NOT IN, EXISTS, NOT EXISTS, scalar) or as a derived table in FROM. ' +
+    'May use any Basic or Intermediate SQL concept inside and outside the subquery. ' +
+    'FORBIDDEN: CTEs, window functions.',
+
+  cte:
+    'MUST use a WITH clause (CTE) for meaningful pre-computation. May chain two CTEs. ' +
+    'May use any Basic or Intermediate SQL concept inside the CTE and outer query. ' +
+    'FORBIDDEN: window functions inside the CTE.',
+
+  window:
+    'MUST use a window function with OVER(): ROW_NUMBER, RANK, DENSE_RANK, or NTILE. ' +
+    'PARTITION BY and ORDER BY inside OVER() must be present. ' +
+    'May use CTEs, subqueries, JOINs, GROUP BY, CASE, and any earlier concepts. ' +
+    'FORBIDDEN: LAG, LEAD, SUM() OVER() with frame clauses.',
+
+  lag_lead:
+    'MUST use LAG() or LEAD() with OVER(ORDER BY...) to compare rows. ' +
+    'May use CTEs, ranking window functions, JOINs, GROUP BY, CASE, and any earlier concepts. ' +
+    'FORBIDDEN: SUM() OVER() or AVG() OVER() with frame clauses.',
+
+  running:
+    'MUST use SUM() OVER() or AVG() OVER() with a frame clause (ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW, or ROWS BETWEEN N PRECEDING AND CURRENT ROW). ' +
+    'May use CTEs, LAG/LEAD, ranking window functions, JOINs, GROUP BY, and any earlier concepts.',
+};
 
 // Concept knowledge base — explanation, syntax, tip, per level description
 const CONCEPT_KNOWLEDGE = {
@@ -482,84 +591,102 @@ const CONCEPT_KNOWLEDGE = {
     tip: 'CONCAT(a, b) is safer than a + b — if either operand is NULL, + returns NULL but CONCAT treats it as empty string.',
     levels: ['LEN, UPPER, LOWER, TRIM','LEFT, RIGHT, SUBSTRING','CONCAT and REPLACE','CHARINDEX to find substrings','Combined string manipulation'],
   },
+
+having: {
+    title: 'Aggregation & Filters (HAVING)',
+    explanation: 'Aggregation functions — COUNT, SUM, AVG, MIN, MAX — collapse multiple rows into a single value per group. HAVING is the filter that runs after grouping, letting you keep only groups that meet a condition. The key rule: WHERE filters individual rows before grouping, HAVING filters groups after aggregation.',
+    syntax: 'SELECT   dept, COUNT(*) AS total, AVG(salary) AS avg_sal\nFROM     Employees\nWHERE    active = 1              -- filters rows BEFORE grouping\nGROUP BY dept\nHAVING   COUNT(*) > 5           -- filters groups AFTER grouping\n         AND AVG(salary) > 50000\nORDER BY total DESC',
+    tip: 'HAVING cannot be used without GROUP BY. If you need to filter on an aggregate, use HAVING. If on a raw column, use WHERE.',
+    levels: ['Single aggregate with HAVING filter','Multiple aggregates in one query','HAVING with two conditions','Conditional aggregation: SUM(CASE WHEN...)','Nested aggregation with subquery'],
+  },
+  setops: {
+    title: 'UNION & Set Operations',
+    explanation: 'Set operations combine the results of two SELECT statements vertically. UNION removes duplicates (slower). UNION ALL keeps all rows including duplicates (faster — prefer this). INTERSECT returns rows in both sets. EXCEPT returns rows in the first set but not the second. All require the same number of columns in the same order.',
+    syntax: '-- UNION ALL (keep all, faster)\nSELECT id, name FROM TableA\nUNION ALL\nSELECT id, name FROM TableB\n\n-- UNION (deduplicated)\nSELECT id FROM A\nUNION\nSELECT id FROM B\n\n-- EXCEPT (in A but not B)\nSELECT id FROM A\nEXCEPT\nSELECT id FROM B\n\n-- INTERSECT (in both)\nSELECT id FROM A\nINTERSECT\nSELECT id FROM B',
+    tip: 'Always use UNION ALL unless you specifically need deduplication. UNION sorts and compares every row to remove duplicates, making it significantly slower on large datasets.',
+    levels: ['UNION ALL to stack two result sets','UNION to deduplicate combined results','EXCEPT to find rows missing from one set','INTERSECT to find rows in both sets','Multi-step set operation with filters'],
+  },
+  sorting: {
+    title: 'ORDER BY, TOP & Pagination',
+    explanation: 'ORDER BY sorts the result set and is always the last clause evaluated. ASC is the default (A-Z, 1-100). DESC reverses it. TOP n (T-SQL) or LIMIT n returns only the first n rows — always use with ORDER BY or results are arbitrary. OFFSET/FETCH enables pagination.',
+    syntax: 'SELECT TOP 10 name, salary\nFROM   Employees\nORDER BY salary DESC, name ASC   -- multiple sort cols\n\n-- Pagination (page 2, 10 per page)\nSELECT name, salary\nFROM   Employees\nORDER BY salary DESC\nOFFSET 10 ROWS\nFETCH NEXT 10 ROWS ONLY\n\n-- Dynamic sort with CASE\nORDER BY CASE WHEN dept = \'Sales\' THEN 0 ELSE 1 END',
+    tip: 'TOP without ORDER BY returns an arbitrary set of rows — SQL Server does not guarantee order without it. Always pair TOP with ORDER BY.',
+    levels: ['Simple ORDER BY single column','Multi-column sort with ASC and DESC','TOP N to limit results','OFFSET/FETCH for pagination','CASE expression inside ORDER BY'],
+  },
+  nulls: {
+    title: 'NULL Handling',
+    explanation: 'NULL means unknown or missing — it is not zero or empty string. Any arithmetic or comparison with NULL returns NULL. The only correct way to check for NULL is IS NULL or IS NOT NULL. COALESCE returns the first non-NULL value from a list. NULLIF returns NULL when two values are equal, which is the standard way to prevent divide-by-zero errors.',
+    syntax: '-- Check for NULL\nWHERE col IS NULL\nWHERE col IS NOT NULL\n\n-- Replace NULL with a fallback\nCOALESCE(col_a, col_b, \'default\')\nISNULL(col, 0)               -- SQL Server only\n\n-- Safe division (avoid divide-by-zero)\nvalue / NULLIF(denominator, 0)\n\n-- NULL in aggregates\nCOUNT(*)    -- counts all rows including NULLs\nCOUNT(col)  -- counts only non-NULL values\nAVG(col)    -- ignores NULL rows',
+    tip: 'Never use = NULL in a WHERE clause — it always evaluates to false. Use IS NULL instead.',
+    levels: ['IS NULL / IS NOT NULL filtering','COALESCE to replace NULL values','ISNULL vs COALESCE comparison','NULLIF for safe division','NULL behaviour in aggregates and JOINs'],
+  },
+  typeconv: {
+    title: 'Type Conversion',
+    explanation: 'SQL stores data in strict types. CAST converts a value to a different type and throws an error on failure. TRY_CAST is the safe version — it returns NULL instead of erroring. Implicit type conversion (e.g. comparing a VARCHAR column to a number) can silently prevent index seeks and slow queries dramatically.',
+    syntax: 'CAST(col AS INT)           -- error on failure\nCAST(col AS FLOAT)         -- for decimal division\nCAST(col AS VARCHAR(50))   -- to string\nCAST(col AS DATE)          -- to date\n\nTRY_CAST(col AS INT)       -- NULL on failure (safe)\n\n-- Integer division truncates!\nSELECT 5 / 2               -- returns 2, not 2.5\nSELECT CAST(5 AS FLOAT)/2  -- returns 2.5',
+    tip: 'Integer division truncates silently — 5/2 = 2 in SQL, not 2.5. Cast at least one operand to FLOAT before dividing if you need decimal results.',
+    levels: ['CAST between basic types','TRY_CAST for safe conversion','Integer vs float division','String to date conversion','Implicit conversion pitfalls'],
+  },
 };
 
+
+
 // Level descriptions per category for prompt building
-function getLevelDesc(catKey, level) {
-  const descs = {
-    1: 'Level 1 (beginner): single isolated use of the concept, minimal complexity, straightforward scenario',
-    2: 'Level 2 (basic+): add a filter condition or a second table, slightly more realistic scenario',
-    3: 'Level 3 (intermediate): combine the concept with a JOIN or aggregation, multi-step thinking required',
-    4: 'Level 4 (advanced): multi-table business scenario requiring the concept plus one other technique',
-    5: 'Level 5+ (complex): sophisticated scenario, concept used in a non-obvious way, may require a CTE wrapper',
-  };
-  return descs[Math.min(level, 5)] || descs[5];
-}
 
-// ── Category progression tracking ────────────────────────────────────────────
-function getLevel(catKey) {
-  return categoryLevel[catKey] || 1;
-}
 
-function advanceLevel(catKey) {
-  categoryLevel[catKey] = (categoryLevel[catKey] || 1) + 1;
-  updateLevelBadge();
-}
+// Level system removed — stubs kept for safety
+function getLevel() { return 1; }
+function advanceLevel() {}
+function updateLevelBadge() {}
 
-function updateLevelBadge() {
-  if (!currentCategory) return;
-  const lvl = getLevel(currentCategory);
-  document.getElementById('level-badge').style.display = 'inline-flex';
-  document.getElementById('level-num').textContent = lvl;
-}
-
-// ── Category pills in header ──────────────────────────────────────────────────
 function renderCategoryPills() {
-  const el = document.getElementById('cat-pills');
+  const el = document.getElementById('cat-dropdown');
   if (!el) return;
-  el.innerHTML = CATEGORIES.map(function(cat) {
-    return '<button class="cat-pill" data-cat="' + cat.key + '" onclick="selectCategory(\'' + cat.key + '\')">' +
-           cat.icon + ' ' + cat.label + '</button>';
-  }).join('');
+  el.innerHTML = '<option value="">Select a level...</option>' +
+    CATEGORY_GROUPS.map(function(g) {
+      return '<option value="' + g.tier + '">' + g.group + '</option>';
+    }).join('');
 }
 
-function selectCategory(key) {
-  if (isGenerating || isRunning) return;
-  currentCategory = key;
-  // Highlight active pill
-  document.querySelectorAll('.cat-pill').forEach(function(p) {
-    p.classList.toggle('active', p.dataset.cat === key);
-  });
-  updateLevelBadge();
-  // Enable next question button
+function selectCategory(tier) {
+  if (!tier || isGenerating || isRunning) return;
+  if (currentCategory !== tier) {
+    Object.keys(datasetCache).forEach(function(k) { delete datasetCache[k]; });
+    Object.keys(prefetchCache).forEach(function(k) { delete prefetchCache[k]; });
+  }
+  currentCategory = tier;
+  currentTopicKey = null;
+  const guideBtn = document.getElementById('guide-btn');
+  if (guideBtn) guideBtn.disabled = false;
   document.getElementById('new-q-btn').disabled = false;
-  // Auto-generate first question
   newQuestion();
 }
 
-// ── Main question generation ──────────────────────────────────────────────────
 function newQuestion() {
   if (isGenerating || isRunning || !currentCategory) return;
   isGenerating = true;
   document.getElementById('new-q-btn').disabled = true;
+  document.getElementById('new-q-btn').textContent = 'Loading...';
   generateLearnQuestion().finally(function() {
     isGenerating = false;
     document.getElementById('new-q-btn').disabled = false;
+    document.getElementById('new-q-btn').textContent = 'Next question';
   });
 }
 
+// Dataset cache per category — reuse across questions in the same category
+const datasetCache = {};
+
 async function generateLearnQuestion() {
   if (!currentCategory) return;
-  const cat = CATEGORIES.find(function(c) { return c.key === currentCategory; });
-  const knowledge = CONCEPT_KNOWLEDGE[currentCategory];
-  const level = getLevel(currentCategory);
-  const levelDesc = getLevelDesc(currentCategory, level);
-  const ctx = DATASET_CONTEXTS[Math.floor(Math.random() * DATASET_CONTEXTS.length)];
+  // Pick a random topic from the tier pool
+  const pool = TIER_POOLS[currentCategory] || TIER_POOLS.basic;
+  const cat = pool[Math.floor(Math.random() * pool.length)];
+  currentTopicKey = cat.key;
 
   qNum++;
   hints = [];
   hintShown = 0;
-  dataset = null;
   question = null;
   updateHintBtn();
   showProblemSkeleton();
@@ -568,94 +695,117 @@ async function generateLearnQuestion() {
   closeFeedbackPane();
   hideNextBtn();
   document.getElementById('run-btn').disabled = true;
-  document.getElementById('hint-btn').disabled = true;
-
-  const prompt = 'Generate a SQL learning exercise teaching: ' + cat.label + '.\n' +
-    'Industry: ' + ctx.industry + '. Level: ' + levelDesc + '.\n' +
-    'JSON only:{"dataset":{"name":"CoName","tables":[{"name":"t","description":"desc",' +
-    '"columns":[{"name":"c","type":"INT|VARCHAR(50)|DATE|DECIMAL(10,2)","note":"PK|FK->t|empty"}],' +
-    '"rows":[{"c":"v"}]}]},' +
-    '"question":{"title":"5-7 word title","submitted_by":"Name, Job Title",' +
-    '"description":"2-3 sentences. Explain the business scenario clearly. State exactly what columns to return and how to order or filter. Reference real column/table names.",' +
-    '"what_to_use":"One sentence telling the learner exactly which SQL concept/function they need for this problem (e.g. Use a LEFT JOIN with a WHERE IS NULL filter)",' +
-    '""example_output":"|col|col|\\n|---|---|\\n|v|v|",' +
-    '"constraints":["specific requirement with real col names"],' +
-    '"hints":["concept reminder","more specific approach","near-answer"],' +
-    '"teaching_note":"1 sentence: what specifically this exercise trains about ' + cat.label + '"}}\n' +
-    'Rules: 2 tables, 4 cols each, 5 rows each, snake_case, short values, FK consistency.\n' +
-    'MUST require ' + cat.label + ' to solve. Match the level complexity exactly.';
+  document.getElementById('showme-btn').disabled = true;
 
   try {
-    const combined = await callClaude(prompt, 1400);
-    dataset = combined.dataset;
-    question = combined.question;
-    if (dataset) dataset.industry = ctx.industry;
+    // Step 1: get or create dataset for this category (cached, refreshes on category switch)
+    if (!datasetCache[currentCategory]) {
+      const ctx = DATASET_CONTEXTS[Math.floor(Math.random() * DATASET_CONTEXTS.length)];
+      const dsPrompt = 'Generate a ' + ctx.industry + ' SQL database. ' +
+        'JSON only:{"name":"CoName",' +
+        '"tables":[{"name":"t","description":"desc",' +
+        '"columns":[{"name":"c","type":"INT|VARCHAR(50)|DATE|DECIMAL(10,2)","note":"PK|FK->t|empty"}],' +
+        '"rows":[{"c":"v"}]}]}' +
+        ' Rules: 2 tables, 4 cols each, 5 rows, snake_case, values under 15 chars, valid FK refs. JSON only, no markdown.';
+      datasetCache[currentCategory] = await callClaude(dsPrompt, 1200);
+      datasetCache[currentCategory].industry = ctx.industry;
+    }
+    dataset = datasetCache[currentCategory];
+
+    // Step 2: generate question using topic-specific rules (no levels)
+    const rule = topicRules[currentCategory] || 'Use ' + cat.label + ' correctly.';
+
+    const schemaDesc = dataset.tables.map(function(t) {
+      return t.name + '(' + t.columns.map(function(col) { return col.name + ':' + col.type; }).join(',') + ')';
+    }).join(' ');
+
+    const rowData = dataset.tables.map(function(t) {
+      if (!t.rows || !t.rows.length) return t.name + ': (no rows)';
+      const cols = t.columns.map(function(col) { return col.name; });
+      const rows = t.rows.slice(0, 4).map(function(r) {
+        return cols.map(function(col) { return r[col] !== undefined ? r[col] : 'NULL'; }).join('|');
+      });
+      return t.name + '[' + cols.join('|') + ']\n' + rows.join('\n');
+    }).join('\n\n');
+
+    const qPrompt =
+      'SQL learning exercise for topic: ' + cat.label + '.\n' +
+      'DB: ' + dataset.name + ' schema: ' + schemaDesc + '\n' +
+      'Actual data:\n' + rowData + '\n' +
+      'Topic constraint — the correct SQL answer MUST follow this rule exactly:\n' + rule + '\n' +
+      'JSON:{"title":"6w title","submitted_by":"Name,Title",' +
+      '"description":"2-3 sentences. Clear business scenario. Exactly what to return and how. Reference real col/table names.",' +
+      '"what_to_use":"One sentence stating the exact function or clause the learner must use",' +
+      '"model_answer":"the complete correct SQL query using actual table/column names","example_output":"run model_answer against the actual data rows above and show EVERY row it returns. Only real values from the data. |col|col|\\n|---|---|\\n|v|v|",' +
+      '"constraints":["specific requirement with real col names"],' +
+      '"hints":["concept reminder — what clause/function to reach for","more specific structural hint","near-answer hint"],' +
+      '"teaching_note":"1 sentence: what specifically this question trains about ' + cat.label + '"} JSON only.' +
+      ' Use actual col/table names. example_output must use real row values from the data above.';
+
+    question = await callClaude(qPrompt, 900);
+    if (question && question.model_answer) {
+      question.model_answer_cache = formatSQL(question.model_answer);
+    }
     hints = question.hints || [];
     hintShown = 0;
     updateHintBtn();
     renderProblem();
     document.getElementById('run-btn').disabled = false;
     document.getElementById('showme-btn').disabled = false;
-    // Reset run button to teal
     document.getElementById('run-btn').className = 'btn btn-teal';
-    document.getElementById('run-btn').textContent = 'Run ▶';
-    // Show concept guide in feedback pane immediately
+    document.getElementById('run-btn').textContent = 'Run \u25B6';
     showConceptGuide();
+
+    // Pre-fetch next question silently
+    prefetchNextQuestion(cat);
+
   } catch(e) {
     document.getElementById('tab-problem').innerHTML = '<div class="empty"><div>Failed: ' + esc(e.message) + '</div><button class="btn btn-ghost" style="margin-top:10px" onclick="newQuestion()">Retry</button></div>';
   }
 }
 
-function showConceptGuide() {
-  if (!currentCategory) return;
-  const knowledge = CONCEPT_KNOWLEDGE[currentCategory];
-  const level = getLevel(currentCategory);
-  const maxPips = 5;
-  const pips = Array.from({length: maxPips}, function(_, i) {
-    return '<div class="level-pip' + (i < level ? ' filled' : '') + '"></div>';
-  }).join('');
 
-  const fpane = document.getElementById('feedback-pane');
-  fpane.style.display = 'flex';
-  fpane.style.flexDirection = 'column';
-  document.getElementById('fb-status').className = 'output-status partial';
-  document.getElementById('fb-title').textContent = knowledge.title + ' — Concept guide';
+// Background pre-fetch — stores result in prefetchCache
+const prefetchCache = {};
 
-  let html = '<div class="learn-concept">' +
-    '<div class="learn-concept-title">What is this?</div>' +
-    '<div class="learn-concept-body">' + esc(knowledge.explanation) + '</div>' +
-    '</div>' +
-    '<div class="learn-concept">' +
-    '<div class="learn-concept-title">Syntax pattern</div>' +
-    '<div class="learn-sql">' + esc(knowledge.syntax) + '</div>' +
-    '</div>' +
-    '<div class="learn-concept">' +
-    '<div class="learn-concept-title">Key tip</div>' +
-    '<div class="learn-concept-body" style="color:var(--amber)">' + esc(knowledge.tip) + '</div>' +
-    '</div>';
-
-  if (question && question.what_to_use) {
-    html += '<div class="learn-concept" style="border-left-color:var(--teal)">' +
-      '<div class="learn-concept-title" style="color:var(--teal)">For this question</div>' +
-      '<div class="learn-concept-body">' + esc(question.what_to_use) + '</div>' +
-      '</div>';
+async function prefetchNextQuestion(cat) {
+  try {
+    const rule = topicRules[cat.key] || 'Use ' + cat.label + ' correctly.';
+    const schemaDesc = dataset.tables.map(function(t) {
+      return t.name + '(' + t.columns.map(function(col) { return col.name + ':' + col.type; }).join(',') + ')';
+    }).join(' ');
+    const prefetchRowData = dataset.tables.map(function(t) {
+      if (!t.rows || !t.rows.length) return t.name + ': (no rows)';
+      const cols = t.columns.map(function(col) { return col.name; });
+      return t.name + '[' + cols.join('|') + ']\n' +
+        t.rows.slice(0, 4).map(function(r) { return cols.map(function(col) { return r[col] !== undefined ? r[col] : 'NULL'; }).join('|'); }).join('\n');
+    }).join('\n\n');
+    const qPrompt =
+      'SQL learning exercise for topic: ' + cat.label + '.\n' +
+      'DB: ' + dataset.name + ' schema: ' + schemaDesc + '\nActual data:\n' + prefetchRowData + '\n' +
+      'Topic constraint: ' + rule + '\n' +
+      'JSON:{"title":"6w title","submitted_by":"Name,Title",' +
+      '"description":"2-3 sentences. Business scenario. What to return. Reference real cols.",' +
+      '"what_to_use":"Exact function/clause to use",' +
+      '"example_output":"|col|col|\\n|---|---|\\n|v|v|",' +
+      '"constraints":["req with real col names"],' +
+      '"hints":["concept reminder","specific hint","near-answer"],' +
+      '"teaching_note":"1 sentence what this trains"} JSON only. Different scenario from previous.';
+    prefetchCache[cat.key] = await callClaude(qPrompt, 900);
+  } catch(e) {
+    // Silent fail
   }
-  if (question && question.teaching_note) {
-    html += '<div class="learn-concept" style="border-left-color:var(--blue)">' +
-      '<div class="learn-concept-title" style="color:var(--blue)">What you are practising</div>' +
-      '<div class="learn-concept-body">' + esc(question.teaching_note) + '</div>' +
-      '</div>';
-  }
-
-  html += '<div class="level-progress">' +
-    '<span style="font-size:10px;color:var(--muted);margin-right:4px">Progress:</span>' +
-    pips + '<span style="font-size:10px;color:var(--muted);margin-left:4px">Level ' + level + ' of 5+</span>' +
-    '</div>';
-
-  document.getElementById('fb-body').innerHTML = html;
 }
 
-// ── Run query ─────────────────────────────────────────────────────────────────
+
+
+function showConceptGuide() {
+  const guideBtn = document.getElementById('guide-btn');
+  if (guideBtn) guideBtn.disabled = false;
+  // Pre-populate so it is ready when clicked
+  renderGuidePopoverContent();
+}
+
 async function runQuery() {
   if (!question || !dataset || isRunning || isGenerating) return;
   const sql = document.getElementById('editor').value.trim();
@@ -682,21 +832,26 @@ async function runQuery() {
   }).join(' ');
 
   const taskDesc = question.description || '';
+  const expectedOut = question.example_output ? 'Expected output:\n' + question.example_output + '\n' : '';
 
-  const prompt = 'Simulate SQL. DB:' + dataset.name + ' Dialect:' + DIALECTS[dialect] + '\n' +
-    'Schema:' + schemaLine + '\nData:\n' + sampleData + '\n' +
-    'Task:' + taskDesc + '\nQuery:\n' + sql + '\n\n' +
+  const prompt = 'Simulate SQL execution against real data. DB:' + dataset.name + ' Dialect:' + DIALECTS[dialect] + '\n' +
+    'Schema:' + schemaLine + '\nActual data:\n' + sampleData + '\n' +
+    'Task:' + taskDesc + '\n' + expectedOut + 'Query to simulate:\n' + sql + '\n\n' +
     'JSON:{"verdict":"correct|partial|incorrect|error","is_acceptable":true,' +
-    '"error_message":null,"cols":["c"],"rows":[[v]],"row_note":null,' +
+    '"error_message":null,"cols":["col_name"],"rows":[[val]],"row_note":null,' +
     '"model_answer":"clean SQL"}\n' +
-    'is_acceptable=true only if query fully answers task. cols+rows=actual output max 5 rows.';
+    'CRITICAL: Execute the query mentally against the actual data rows above. ' +
+    'cols and rows MUST reflect what this query actually returns — never empty unless it genuinely matches zero rows. ' +
+    'is_acceptable=true ONLY if the query correctly answers the task AND its output matches the expected output above (same rows, same values). ' +
+    'If the expected output is provided, use it as the ground truth — if the user query produces the same result, mark correct. ' +
+    'verdict=partial if close but wrong column, filter, or sort. ' +
+    'model_answer uses ' + DIALECTS[dialect] + ' syntax with real col/table names.';
 
   try {
     const result = await callClaude(prompt, 900);
     if (result.model_answer && question) question.model_answer_cache = result.model_answer;
     if (result.is_acceptable) {
       lastCorrect = true;
-      advanceLevel(currentCategory);
       showNextBtn();
     } else {
       lastCorrect = false;
@@ -713,7 +868,6 @@ async function runQuery() {
   document.getElementById('run-btn').disabled = false;
 }
 
-// ── Reveal hint ───────────────────────────────────────────────────────────────
 function revealHint() {
   // Hints are now shown inline below the output — this is a no-op
 }
@@ -730,8 +884,81 @@ function showModelAnswer() {
   }
 }
 
+function formatSQL(sql) {
+  if (!sql) return sql;
+  // If it already has newlines it was formatted by Claude — keep it
+  if (sql.includes('\n')) return sql;
+  // Otherwise it came back as a single line — reformat it
+  const keywords = [
+    'SELECT', 'FROM', 'INNER JOIN', 'LEFT JOIN', 'RIGHT JOIN', 'FULL OUTER JOIN',
+    'CROSS JOIN', 'JOIN', 'WHERE', 'AND', 'OR', 'GROUP BY', 'HAVING',
+    'ORDER BY', 'LIMIT', 'OFFSET', 'UNION ALL', 'UNION', 'INTERSECT', 'EXCEPT',
+    'WITH', 'ON', 'SET', 'INSERT INTO', 'VALUES', 'UPDATE', 'DELETE FROM',
+  ];
+  let result = sql.trim();
+  keywords.forEach(function(kw) {
+    const re = new RegExp('\\b' + kw + '\\b', 'gi');
+    result = result.replace(re, '\n' + kw);
+  });
+  // Indent continuation lines (AND/OR inside WHERE etc.)
+  const lines = result.split('\n').filter(function(l) { return l.trim(); });
+  return lines.map(function(line, i) {
+    const trimmed = line.trim();
+    if (i === 0) return trimmed;
+    if (/^(AND|OR)\b/i.test(trimmed)) return '  ' + trimmed;
+    return trimmed;
+  }).join('\n');
+}
+
 function buildModelAnswerHtml(sql) {
-  return '<div class="out-section" style="margin-top:10px"><div class="out-label model">Model answer</div><div class="model-code">' + esc(sql) + '</div></div>';
+  return '<div class="out-section" style="margin-top:10px">' +
+    '<div class="out-label model">Model answer</div>' +
+    '<div class="model-code">' + esc(formatSQL(sql)) + '</div>' +
+    '</div>';
+}
+
+async function explainQuery() {
+  const sql = document.getElementById('editor').value.trim();
+  if (!sql || !question || !dataset) return;
+
+  const btn = document.getElementById('explain-btn');
+  btn.disabled = true;
+  btn.textContent = 'Explaining...';
+
+  const explainArea = document.getElementById('out-explain-area');
+  explainArea.style.display = 'block';
+  explainArea.innerHTML = '<div class="explain-section"><div class="explain-loading"><div class="lang-dot" style="animation:pulse 1s infinite"></div>Generating explanation...</div></div>';
+
+  const schemaLine = dataset.tables.map(function(t) {
+    return t.name + '(' + t.columns.map(function(col) { return col.name + ' ' + col.type; }).join(', ') + ')';
+  }).join(' | ');
+
+  const prompt = 'Explain this SQL query line by line for a learner. Topic: ' + (currentTopicKey || '') + '.' +
+    ' Schema: ' + schemaLine + '.' +
+    ' Query: ' + sql.replace(/\n/g, ' ') + '.' +
+    ' Respond ONLY with JSON array: [{"sql":"clause","explanation":"plain English why"}]' +
+    ' Rules: split by clause (SELECT/FROM/JOIN/WHERE/GROUP BY/HAVING/ORDER BY/WITH). 1-2 sentences each. Explain WHY not just what.';
+
+  try {
+    const lines = await callClaude(prompt, 1200);
+    if (!Array.isArray(lines) || !lines.length) throw new Error('No explanation returned');
+    let html = '<div class="explain-section">';
+    html += '<div class="explain-label">&#10140; Query explained</div>';
+    lines.forEach(function(line) {
+      html += '<div class="explain-line">' +
+        '<div class="explain-sql">' + esc(line.sql || '') + '</div>' +
+        '<div class="explain-desc">' + esc(line.explanation || '') + '</div>' +
+        '</div>';
+    });
+    html += '</div>';
+    explainArea.innerHTML = html;
+    btn.textContent = 'Explain →';
+    btn.disabled = false;
+  } catch(e) {
+    explainArea.innerHTML = '<div class="explain-section"><div style="color:var(--muted);font-size:12px">Could not generate explanation. ' + esc(e.message) + '</div></div>';
+    btn.textContent = 'Explain →';
+    btn.disabled = false;
+  }
 }
 
 function closeFeedbackPane() {
@@ -747,6 +974,8 @@ function showMeAnswer() {
   if (question.model_answer_cache) {
     document.getElementById('editor').value = question.model_answer_cache;
     updateLineNumbers();
+    const eb = document.getElementById('explain-btn');
+    if (eb) { eb.style.display = 'inline-flex'; eb.disabled = false; }
     return;
   }
   const btn = document.getElementById('showme-btn');
@@ -758,7 +987,7 @@ function showMeAnswer() {
   }).join(' ');
   const msgContent = 'Write a ' + DIALECTS[dialect] + ' SQL query for: ' +
     (question.description || '') + ' Schema: ' + schemaLine +
-    '. SQL only, no markdown, no explanation.';
+    '. Format the SQL with each major clause (SELECT, FROM, JOIN, WHERE, GROUP BY, HAVING, ORDER BY) on its own line. Indent continuation lines with 2 spaces. No markdown, no explanation.';
   fetch(API, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -772,6 +1001,8 @@ function showMeAnswer() {
     updateLineNumbers();
     btn.disabled = false;
     btn.textContent = 'Show me';
+    const eb2 = document.getElementById('explain-btn');
+    if (eb2) { eb2.style.display = 'inline-flex'; eb2.disabled = false; }
   }).catch(function() {
     btn.disabled = false;
     btn.textContent = 'Show me';
@@ -806,7 +1037,6 @@ function renderMarkdownTable(text) {
   return html;
 }
 
-// ── Render functions ──────────────────────────────────────────────────────────
 function renderProblem() {
   if (!question) return;
   const constraints = (question.constraints || []).map(function(r) { return '<li>' + esc(r) + '</li>'; }).join('');
@@ -841,8 +1071,11 @@ function renderProblem() {
     });
   }
 
-  const cat = currentCategory ? CATEGORIES.find(function(c) { return c.key === currentCategory; }) : null;
-  const catTag = cat ? '<span style="font-size:10px;font-family:var(--mono);padding:2px 8px;border-radius:10px;background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple);margin-left:8px">' + cat.label + '</span>' : '';
+  const tierLabels = { basic:'Basic SQL', intermediate:'Intermediate SQL', advanced:'Advanced SQL' };
+  const topicEntry = currentTopicKey ? CATEGORIES.find(function(c) { return c.key === currentTopicKey; }) : null;
+  const catTag = topicEntry ?
+    '<span style="font-size:10px;font-family:var(--mono);padding:2px 8px;border-radius:10px;background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple);margin-left:8px">' +
+    esc(tierLabels[currentCategory] || '') + ' — ' + esc(topicEntry.label) + ' ' + esc(topicEntry.icon) + '</span>' : '';
 
   document.getElementById('tab-problem').innerHTML =
     '<div class="req-from">Question #' + qNum + catTag + '</div>' +
@@ -933,6 +1166,13 @@ function renderResult(r) {
   }
   document.getElementById('out-body').innerHTML = outHtml;
 
+  // Show Explain button when user has a query in the editor (correct or show-me)
+  const explainBtn = document.getElementById('explain-btn');
+  if (explainBtn && document.getElementById('editor').value.trim()) {
+    explainBtn.style.display = 'inline-flex';
+    explainBtn.disabled = false;
+  }
+
   // ── Inline hints below output ─────────────────────────────────────────────
   const hintsArea = document.getElementById('out-hints-area');
   if (!isCorrect && !isError && hints.length > 0) {
@@ -950,15 +1190,7 @@ function renderResult(r) {
     hintsArea.style.display = 'none';
   }
 
-  // Update feedback pane if open (concept guide)
-  if (isCorrect) {
-    const newLevel = getLevel(currentCategory);
-    const fpane = document.getElementById('feedback-pane');
-    if (fpane.style.display !== 'none') {
-      document.getElementById('fb-title').textContent = 'Correct — Level ' + newLevel + '!';
-      document.getElementById('fb-status').className = 'output-status correct';
-    }
-  }
+
 }
 
 function showNextHint() {
@@ -978,13 +1210,7 @@ function showNextHint() {
   hintsArea.innerHTML = hHtml;
 }
 
-function renderSchema() {} // no-op — schema is in renderProblem
-function renderDiffTab() {
-  const pop = document.getElementById('sql-diff-popover');
-  if (pop) pop.innerHTML = '';
-}
 
-// ── UI helpers ────────────────────────────────────────────────────────────────
 function setDialect(val) {
   dialect = val;
   document.getElementById('dialect-label').textContent = DIALECTS[val] || val;
@@ -1036,6 +1262,10 @@ function clearEditor(full) {
   if (hintsArea) hintsArea.style.display = 'none';
   const showmeBtn = document.getElementById('showme-btn');
   if (showmeBtn) showmeBtn.disabled = true;
+  const eb = document.getElementById('explain-btn');
+  if (eb) { eb.style.display = 'none'; eb.disabled = true; }
+  const ea = document.getElementById('out-explain-area');
+  if (ea) { ea.style.display = 'none'; ea.innerHTML = ''; }
 }
 
 function showNextBtn() { document.getElementById('next-btn').style.display = 'inline-flex'; }
@@ -1071,30 +1301,133 @@ function esc(s) {
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-// ── Resize handle ─────────────────────────────────────────────────────────────
 function initResize() {
+  // Horizontal output pane resize (drag up/down)
   const handle = document.getElementById('resize-handle');
   const outputPane = document.getElementById('output-pane');
-  if (!handle || !outputPane) return;
-  let startY = 0, startH = 0, dragging = false;
-  handle.addEventListener('mousedown', function(e) {
-    dragging = true; startY = e.clientY; startH = outputPane.offsetHeight;
-    handle.classList.add('dragging');
-    document.body.style.userSelect = 'none';
-    document.body.style.cursor = 'ns-resize';
-  });
-  document.addEventListener('mousemove', function(e) {
-    if (!dragging) return;
-    outputPane.style.height = Math.max(60, Math.min(600, startH + (startY - e.clientY))) + 'px';
-  });
-  document.addEventListener('mouseup', function() {
-    if (!dragging) return;
-    dragging = false; handle.classList.remove('dragging');
-    document.body.style.userSelect = ''; document.body.style.cursor = '';
-  });
+  if (handle && outputPane) {
+    let startY = 0, startH = 0, dragging = false;
+    handle.addEventListener('mousedown', function(e) {
+      dragging = true; startY = e.clientY; startH = outputPane.offsetHeight;
+      handle.classList.add('dragging');
+      document.body.style.userSelect = 'none';
+      document.body.style.cursor = 'ns-resize';
+    });
+    document.addEventListener('mousemove', function(e) {
+      if (!dragging) return;
+      outputPane.style.height = Math.max(60, Math.min(600, startH + (startY - e.clientY))) + 'px';
+    });
+    document.addEventListener('mouseup', function() {
+      if (!dragging) return;
+      dragging = false; handle.classList.remove('dragging');
+      document.body.style.userSelect = ''; document.body.style.cursor = '';
+    });
+  }
+
+  // Vertical left panel resize (drag left/right)
+  const vHandle = document.getElementById('vert-resize-handle');
+  const leftPanel = document.getElementById('left-panel');
+  if (vHandle && leftPanel) {
+    let startX = 0, startW = 0, vDragging = false;
+    vHandle.addEventListener('mousedown', function(e) {
+      vDragging = true; startX = e.clientX; startW = leftPanel.offsetWidth;
+      vHandle.classList.add('v-dragging');
+      document.body.style.userSelect = 'none';
+      document.body.style.cursor = 'col-resize';
+    });
+    document.addEventListener('mousemove', function(e) {
+      if (!vDragging) return;
+      const newW = Math.max(220, Math.min(600, startW + (e.clientX - startX)));
+      leftPanel.style.width = newW + 'px';
+      leftPanel.style.minWidth = newW + 'px';
+    });
+    document.addEventListener('mouseup', function() {
+      if (!vDragging) return;
+      vDragging = false; vHandle.classList.remove('v-dragging');
+      document.body.style.userSelect = ''; document.body.style.cursor = '';
+    });
+  }
 }
 
-// ── SQL Diff popover (kept from before) ───────────────────────────────────────
+
+function toggleGuidePopover(e) {
+  e.stopPropagation();
+  const pop = document.getElementById('guide-popover');
+  pop.classList.toggle('open');
+  if (pop.classList.contains('open')) {
+    renderGuidePopoverContent();
+    document.addEventListener('click', function closeGuide() {
+      pop.classList.remove('open');
+      document.getElementById('guide-btn').classList.remove('active');
+      document.removeEventListener('click', closeGuide);
+    });
+    document.getElementById('guide-btn').classList.add('active');
+  } else {
+    document.getElementById('guide-btn').classList.remove('active');
+  }
+}
+
+function renderGuidePopoverContent() {
+  const pop = document.getElementById('guide-popover');
+  if (!currentCategory) {
+    pop.innerHTML = '<div style="padding:14px;font-size:12px;color:var(--muted)">Select a level and generate a question first.</div>';
+    return;
+  }
+  const knowledge = CONCEPT_KNOWLEDGE[currentTopicKey];
+  const refKeyMap = {
+    select:'querying', joins:'joins', groupby:'aggregation', having:'aggregation',
+    subquery:'querying', setops:'sets', sorting:'querying', case:'case',
+    nulls:'nulls', cte:'ctes', window:'window', lag_lead:'window',
+    running:'window', dates:'dates', strings:'strings', typeconv:'types'
+  };
+  const refKey = knowledge ? refKeyMap[currentTopicKey] : null;
+  const refRows = refKey ? REF_DATA[refKey] : null;
+
+  let html = '';
+
+  if (!knowledge) {
+    html = '<div style="padding:14px;font-size:12px;color:var(--muted)">Generate a question to see the guide.</div>';
+    pop.innerHTML = html;
+    return;
+  }
+
+  html += '<div style="padding:14px 16px 0">';
+  html += '<div class="diff-pop-title">' + esc(knowledge.title) + '</div>';
+
+  html += '<div class="learn-concept"><div class="learn-concept-title">What is this?</div>' +
+    '<div class="learn-concept-body" style="font-size:11.5px">' + esc(knowledge.explanation) + '</div></div>';
+
+  html += '<div class="learn-concept"><div class="learn-concept-title">Syntax pattern</div>' +
+    '<div class="learn-sql" style="font-size:10.5px">' + esc(knowledge.syntax) + '</div></div>';
+
+  html += '<div class="learn-concept"><div class="learn-concept-title" style="color:var(--amber)">Key tip</div>' +
+    '<div class="learn-concept-body" style="font-size:11.5px;color:var(--amber)">' + esc(knowledge.tip) + '</div></div>';
+
+  if (question && question.what_to_use) {
+    html += '<div class="learn-concept" style="border-left-color:var(--teal)">' +
+      '<div class="learn-concept-title" style="color:var(--teal)">For this question</div>' +
+      '<div class="learn-concept-body" style="font-size:11.5px">' + esc(question.what_to_use) + '</div></div>';
+  }
+  if (question && question.teaching_note) {
+    html += '<div class="learn-concept" style="border-left-color:var(--blue)">' +
+      '<div class="learn-concept-title" style="color:var(--blue)">What you are practising</div>' +
+      '<div class="learn-concept-body" style="font-size:11.5px">' + esc(question.teaching_note) + '</div></div>';
+  }
+
+  if (refRows) {
+    html += '<div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border)">';
+    html += '<div class="ref-section-label" style="margin-bottom:6px">Quick reference</div>';
+    refRows.forEach(function(row) {
+      html += '<div class="ref-row"><div class="ref-kw">' + esc(row[0]) + '</div><div class="ref-desc">' + esc(row[1]) + '</div></div>';
+    });
+    html += '</div>';
+  }
+
+  html += '</div>';
+  pop.innerHTML = html;
+}
+
+
 function toggleSqlDiff(e) {
   e.stopPropagation();
   const pop = document.getElementById('sql-diff-popover');
@@ -1112,21 +1445,25 @@ function renderDiffPopover() {
   const pop = document.getElementById('sql-diff-popover');
   pop.innerHTML = '<div style="margin-bottom:10px;font-size:11px;color:var(--muted)">Your dialect (<strong style="color:var(--blue)">' + DIALECTS[dialect] + '</strong>) is highlighted.</div>';
   const rows = [
-    ["Limit rows","TOP n","LIMIT n","LIMIT n","LIMIT n","LIMIT n"],
-    ["Limit + offset","OFFSET n ROWS FETCH NEXT m ROWS ONLY","LIMIT m OFFSET n","LIMIT m OFFSET n","LIMIT m OFFSET n","LIMIT m OFFSET n"],
-    ["Current datetime","GETDATE()","NOW()","NOW()","datetime('now')","CURRENT_TIMESTAMP"],
-    ["Date diff","DATEDIFF(unit,a,b)","DATEDIFF(a,b)","DATE_PART('day',b-a)","julianday(b)-julianday(a)","DATEDIFF(a,b)"],
-    ["Add to date","DATEADD(unit,n,d)","DATE_ADD(d,INTERVAL n u)","d + INTERVAL 'n u'","datetime(d,'+n days')","DATE_ADD(d,n)"],
-    ["Replace NULL","ISNULL(a,b)","IFNULL(a,b)","COALESCE(a,b)","IFNULL(a,b)","COALESCE(a,b)"],
-    ["Concat","a + b / CONCAT()","CONCAT(a,b)","a || b","a || b","CONCAT(a,b)"],
-    ["Auto-increment","IDENTITY(1,1)","AUTO_INCREMENT","SERIAL","AUTOINCREMENT","GENERATED ALWAYS AS IDENTITY"],
-    ["Upsert","MERGE","INSERT...ON DUPLICATE KEY","INSERT...ON CONFLICT","INSERT OR REPLACE","MERGE"],
-    ["Regex","LIKE only","REGEXP","~ / SIMILAR TO","REGEXP","RLIKE"],
-    ["JSON","FOR JSON / OPENJSON","JSON_EXTRACT()","-> / ->> / jsonb","json_extract()","GET_JSON_OBJECT()"],
-    ["Case sensitive","Default CI","Configurable","Case sensitive","Case sensitive","Configurable"],
+    ["Limit rows",    "TOP n",                           "LIMIT n",                    "LIMIT n",              "LIMIT n",                "LIMIT n",              "ROWNUM / FETCH FIRST n ROWS", "LIMIT n"],
+    ["Limit + offset","OFFSET n ROWS FETCH NEXT m ROWS ONLY","LIMIT m OFFSET n",       "LIMIT m OFFSET n",     "LIMIT m OFFSET n",       "LIMIT m OFFSET n",     "OFFSET n ROWS FETCH NEXT m ROWS ONLY","LIMIT m OFFSET n"],
+    ["Current datetime","GETDATE()",                    "NOW()",                        "NOW()",                "datetime('now')",         "CURRENT_TIMESTAMP",    "SYSDATE / SYSTIMESTAMP",    "CURRENT_TIMESTAMP()"],
+    ["Date diff",     "DATEDIFF(unit,a,b)",              "DATEDIFF(a,b)",               "DATE_PART('day',b-a)", "julianday(b)-julianday(a)","DATEDIFF(a,b)",      "a - b (returns days)",       "DATE_DIFF(a,b,unit)"],
+    ["Add to date",   "DATEADD(unit,n,d)",               "DATE_ADD(d,INTERVAL n u)",    "d + INTERVAL 'n u'",   "datetime(d,'+n days')",   "DATE_ADD(d,n)",        "d + INTERVAL 'n' unit",      "DATE_ADD(d, INTERVAL n unit)"],
+    ["Replace NULL",  "ISNULL(a,b)",                     "IFNULL(a,b)",                 "COALESCE(a,b)",        "IFNULL(a,b)",             "COALESCE(a,b)",        "NVL(a,b) / COALESCE(a,b)",   "IFNULL(a,b) / COALESCE(a,b)"],
+    ["Concat",        "a + b / CONCAT()",                "CONCAT(a,b)",                 "a || b",               "a || b",                  "CONCAT(a,b)",          "a || b / CONCAT(a,b)",       "CONCAT(a,b)"],
+    ["Auto-increment","IDENTITY(1,1)",                   "AUTO_INCREMENT",              "SERIAL",               "AUTOINCREMENT",           "GENERATED ALWAYS AS IDENTITY","GENERATED AS IDENTITY","Not native (use SEQUENCE)"],
+    ["Upsert",        "MERGE",                           "INSERT...ON DUPLICATE KEY",   "INSERT...ON CONFLICT", "INSERT OR REPLACE",       "MERGE",                "MERGE",                      "MERGE / INSERT IF NOT EXISTS"],
+    ["Regex",         "LIKE only",                       "REGEXP",                      "~ / SIMILAR TO",       "REGEXP",                  "RLIKE",                "REGEXP_LIKE(col,pattern)",    "REGEXP_CONTAINS(col,pattern)"],
+    ["String length", "LEN(col)",                        "LENGTH(col)",                 "LENGTH(col)",          "LENGTH(col)",             "LENGTH(col)",          "LENGTH(col)",                "LENGTH(col)"],
+    ["Substring",     "SUBSTRING(col,s,n)",              "SUBSTRING(col,s,n)",          "SUBSTRING(col,s,n)",   "SUBSTR(col,s,n)",         "SUBSTRING(col,s,n)",   "SUBSTR(col,s,n)",            "SUBSTR(col,s,n)"],
+    ["JSON",          "FOR JSON / OPENJSON",             "JSON_EXTRACT()",              "-> / ->> / jsonb",     "json_extract()",          "GET_JSON_OBJECT()",    "JSON_VALUE / JSON_QUERY",    "JSON_VALUE(col,'$.key')"],
+    ["Pivot",         "PIVOT keyword",                   "Manual CASE",                 "Crosstab or CASE",     "Manual CASE",             "Manual CASE",          "PIVOT keyword",              "Manual CASE"],
+    ["String agg",    "STRING_AGG(col,sep)",             "GROUP_CONCAT(col,sep)",       "STRING_AGG(col,sep)",  "GROUP_CONCAT(col,sep)",   "COLLECT_LIST(col)",    "LISTAGG(col,sep)",           "STRING_AGG(col,sep)"],
+    ["Case sensitive","Default CI",                      "Configurable",                "Case sensitive",       "Case sensitive",          "Configurable",         "Case sensitive (NLS)",       "Case sensitive"],
   ];
-  const dialects = ['tsql','mysql','postgres','sqlite','spark'];
-  const headers = ['T-SQL','MySQL','PostgreSQL','SQLite','Spark SQL'];
+  const dialects = ['tsql','mysql','postgres','sqlite','spark','oracle','bigquery'];
+  const headers  = ['T-SQL','MySQL','PostgreSQL','SQLite','Spark SQL','Oracle','BigQuery'];
   const dIdx = dialects.indexOf(dialect);
   let html = '<table class="diff"><thead><tr><th>Feature</th>';
   headers.forEach(function(h, i) { html += '<th class="' + (i === dIdx ? 'active-dialect' : '') + '">' + h + '</th>'; });
@@ -1140,7 +1477,6 @@ function renderDiffPopover() {
   pop.innerHTML += html;
 }
 
-// ── callClaude ────────────────────────────────────────────────────────────────
 async function callClaude(prompt, maxTokens) {
   const r = await fetch(API, {
     method: 'POST',
@@ -1153,22 +1489,54 @@ async function callClaude(prompt, maxTokens) {
   if (d.stop_reason === 'max_tokens') throw new Error('Response truncated - try again.');
   const raw = (d.content && d.content[0] && d.content[0].text) ? d.content[0].text : '';
   const text = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/i, '').trim();
+
+  // Find start of JSON object or array
   const objStart = text.indexOf('{'), arrStart = text.indexOf('[');
   let jsonStart = -1;
   if (objStart === -1 && arrStart === -1) throw new Error('No JSON in response.');
   if (objStart === -1) jsonStart = arrStart;
   else if (arrStart === -1) jsonStart = objStart;
   else jsonStart = Math.min(objStart, arrStart);
-  const isArr = (arrStart !== -1 && (objStart === -1 || arrStart < objStart));
-  const jsonEnd = text.lastIndexOf(isArr ? ']' : '}');
-  if (jsonEnd < jsonStart) throw new Error('Malformed JSON.');
-  return JSON.parse(text.slice(jsonStart, jsonEnd + 1));
+  const openChar  = text[jsonStart];
+  const closeChar = openChar === '{' ? '}' : ']';
+
+  // Walk the string tracking depth to find the true closing bracket
+  let depth = 0, inStr = false, escape = false, jsonEnd = -1;
+  for (let i = jsonStart; i < text.length; i++) {
+    const ch = text[i];
+    if (escape)          { escape = false; continue; }
+    if (ch === '\\')    { escape = true;  continue; }
+    if (ch === '"')      { inStr = !inStr;  continue; }
+    if (inStr)           { continue; }
+    if (ch === openChar) { depth++; }
+    else if (ch === closeChar) {
+      depth--;
+      if (depth === 0) { jsonEnd = i; break; }
+    }
+  }
+  if (jsonEnd === -1) throw new Error('Could not find end of JSON.');
+  try {
+    return JSON.parse(text.slice(jsonStart, jsonEnd + 1));
+  } catch(e) {
+    throw new Error('JSON parse failed: ' + e.message.slice(0, 80));
+  }
 }
 
 
-// ── SQL Reference dropdown ────────────────────────────────────────────────────
 const REF_DATA = {
-  querying: [["SELECT col1, col2","Return specific columns"],["SELECT DISTINCT col","Unique values only"],["SELECT TOP n","First n rows (T-SQL) — use LIMIT n elsewhere"],["WHERE condition","Filter rows before grouping"],["AND / OR / NOT","AND binds tighter than OR — use parentheses"],["BETWEEN a AND b","Inclusive range"],["IN (a, b, c)","Match any value in list or subquery"],["LIKE 'val%'","% = any chars, _ = one char"],["IS NULL / IS NOT NULL","Never use = NULL"],["ORDER BY col DESC","Only clause that can use SELECT aliases"],["OFFSET n ROWS FETCH NEXT m ROWS ONLY","Pagination — requires ORDER BY"]],
+  querying: [
+    ["SELECT col1, col2","Return specific columns"],
+    ["SELECT DISTINCT col","Unique values only"],
+    ["SELECT TOP n","First n rows (T-SQL) — use LIMIT n elsewhere"],
+    ["WHERE condition","Filter rows before grouping"],
+    ["AND / OR / NOT","AND binds tighter than OR — use parentheses"],
+    ["BETWEEN a AND b","Inclusive range"],
+    ["IN (a, b, c)","Match any value in list or subquery"],
+    ["LIKE 'val%'","% = any chars, _ = one char"],
+    ["IS NULL / IS NOT NULL","Never use = NULL"],
+    ["ORDER BY col DESC","Only clause that can use SELECT aliases"],
+    ["OFFSET n ROWS FETCH NEXT m ROWS ONLY","Pagination — requires ORDER BY"],
+  ],
   joins: [["INNER JOIN ... ON","Matching rows only"],["LEFT JOIN ... ON","All left rows, NULLs for no right match"],["FULL OUTER JOIN","All rows both sides"],["CROSS JOIN","Every row x every row"],["LEFT JOIN + WHERE b.id IS NULL","Anti-join"],["SELF JOIN","Table joined to itself"],["CROSS APPLY","Row-level subquery per row (T-SQL)"]],
   aggregation: [["COUNT(*) / COUNT(col)","All rows / non-NULL only"],["COUNT(DISTINCT col)","Unique non-NULL values"],["SUM / AVG / MIN / MAX","All ignore NULLs"],["GROUP BY col","Every non-aggregate SELECT col must appear here"],["HAVING condition","Filter after grouping — WHERE cannot use aggregates"],["SUM(CASE WHEN x THEN 1 ELSE 0 END)","Conditional count"],["AVG(CASE WHEN x THEN col END)","Average only matching rows"]],
   ctes: [["WITH name AS ( query )","Named temp result — lives only for this query"],[", name2 AS ( query )","Chain — comma-separated, no extra WITH"],["Cannot filter on window fn in WHERE","Wrap in CTE, filter outside"],["Recursive: anchor UNION ALL recursive","Hierarchy traversal"],["OPTION (MAXRECURSION n)","Default 100, 0 = unlimited"]],
@@ -1192,10 +1560,17 @@ function renderRefCategory(cat) {
   }).join('');
 }
 
-// ── Init ──────────────────────────────────────────────────────────────────────
 updateLineNumbers();
 renderCategoryPills();
 initResize();
+// Remove unused renderRefCategory call
+
+
+
+
+
+
+
 
 </script>
 </body>
