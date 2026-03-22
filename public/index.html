@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SQL Practice</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0c0f1a;--surface:#111520;--surface2:#171d2e;--surface3:#1e2640;
+  --border:#232d45;--border2:#2e3a58;
+  --text:#dde4f0;--muted:#6b7a99;--dim:#3d4e6e;
+  --blue:#5b8dee;--blue-bg:rgba(91,141,238,.10);
+  --purple:#9b7cf4;--purple-bg:rgba(155,124,244,.10);
+  --teal:#2dd4bf;--teal-bg:rgba(45,212,191,.10);
+  --green:#3ecf8e;--green-bg:rgba(62,207,142,.10);
+  --amber:#f5a623;--amber-bg:rgba(245,166,35,.10);
+  --red:#e85d75;--red-bg:rgba(232,93,117,.10);
+  --mono:'JetBrains Mono',monospace;--sans:'DM Sans',sans-serif;
+}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;line-height:1.6;display:flex;flex-direction:column;height:100vh;overflow:hidden}
+
+/* Header */
+.hdr{background:var(--surface);border-bottom:1px solid var(--border);padding:0 16px;height:48px;display:flex;align-items:center;gap:10px;flex-shrink:0;position:relative}
+.logo{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--blue);letter-spacing:.05em;margin-right:4px}
+.logo span{color:var(--muted);font-weight:400}
+.sep{width:1px;height:20px;background:var(--border);flex-shrink:0}
+.dialect-select{font-family:var(--mono);font-size:11px;background:var(--surface2);border:1px solid var(--border2);border-radius:5px;color:var(--text);padding:4px 8px;cursor:pointer;outline:none}
+.dataset-pill{font-size:11px;font-family:var(--mono);color:var(--muted);background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:3px 10px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.diff-btns{display:flex;gap:3px}
+.diff-btn{font-family:var(--mono);font-size:11px;padding:3px 9px;border-radius:4px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all .15s}
+.diff-btn:hover{color:var(--text);border-color:var(--border2)}
+.diff-btn.active-easy{background:var(--green-bg);border-color:var(--green);color:var(--green)}
+.diff-btn.active-medium{background:var(--amber-bg);border-color:var(--amber);color:var(--amber)}
+.diff-btn.active-hard{background:var(--red-bg);border-color:var(--red);color:var(--red)}
+.hdr-right{display:flex;align-items:center;gap:6px;margin-left:auto}
+
+.btn{font-family:var(--sans);font-size:12px;font-weight:500;padding:5px 12px;border-radius:5px;border:1px solid;cursor:pointer;transition:all .15s;white-space:nowrap}
+.btn:disabled{opacity:.35;cursor:not-allowed}
+.btn-ghost{background:transparent;border-color:var(--border2);color:var(--muted)}
+.btn-ghost:hover:not(:disabled){border-color:var(--blue);color:var(--blue);background:var(--blue-bg)}
+.btn-teal{background:var(--teal-bg);border-color:var(--teal);color:var(--teal)}
+.btn-teal:hover:not(:disabled){filter:brightness(1.15)}
+.btn-green{background:var(--green-bg);border-color:var(--green);color:var(--green);font-weight:600}
+.btn-green:hover:not(:disabled){filter:brightness(1.15)}
+.btn-blue{background:var(--blue-bg);border-color:var(--blue);color:var(--blue)}
+.btn-blue:hover:not(:disabled){filter:brightness(1.15)}
+
+/* Main layout */
+.main{display:flex;flex:1;overflow:hidden}
+
+/* Left panel */
+.left{width:40%;min-width:280px;border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.tabs{display:flex;border-bottom:1px solid var(--border);background:var(--surface);flex-shrink:0;overflow-x:auto;scrollbar-width:none}
+.tab{font-size:11px;font-weight:500;padding:9px 12px;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;user-select:none;white-space:nowrap;flex-shrink:0}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--blue);border-bottom-color:var(--blue)}
+.panel{flex:1;overflow-y:auto;padding:16px;scrollbar-width:thin;scrollbar-color:var(--border2) transparent;display:none}
+.panel.active{display:block}
+
+/* Problem panel */
+.req-from{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin-bottom:5px}
+.req-title{font-size:16px;font-weight:600;color:var(--text);line-height:1.3;margin-bottom:10px}
+.req-summary{font-size:12.5px;color:#8a9ab8;line-height:1.7;margin-bottom:12px}
+.req-list{margin:0 0 14px 16px;display:flex;flex-direction:column;gap:6px}
+.req-list li{font-size:12.5px;color:#b0bdd0;line-height:1.6}
+.req-divider{height:1px;background:var(--border);margin:12px 0}
+.req-submitter{font-size:11px;color:var(--muted);display:flex;flex-direction:column;gap:3px}
+.req-submitter span{color:var(--text);font-weight:500}
+
+/* Schema */
+.schema-tbl-name{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--blue);margin-bottom:4px;margin-top:12px}
+.schema-tbl-name:first-child{margin-top:0}
+.schema-tbl-desc{font-size:11px;color:var(--muted);margin-bottom:5px}
+table.st{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:4px}
+table.st th{background:var(--surface2);color:var(--muted);text-align:left;padding:4px 7px;border:1px solid var(--border);font-weight:500;font-size:10px}
+table.st td{padding:3px 7px;border:1px solid var(--border);color:var(--text)}
+table.st tr:nth-child(even) td{background:var(--surface2)}
+.col-pk{color:var(--amber)}.col-type{color:var(--purple);font-family:var(--mono);font-size:10px}
+.sample-label{font-size:10px;color:var(--dim);margin:7px 0 3px;letter-spacing:.05em;text-transform:uppercase;font-weight:600}
+table.sd{width:100%;border-collapse:collapse;font-size:10px;margin-bottom:12px;font-family:var(--mono)}
+table.sd th{background:var(--surface3);color:var(--muted);padding:3px 6px;border:1px solid var(--border);text-align:left}
+table.sd td{padding:3px 6px;border:1px solid var(--border);color:var(--text);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+table.sd tr:nth-child(even) td{background:var(--surface2)}
+.result-table-wrap{overflow-x:auto}
+
+/* Diff tab */
+.diff-intro{font-size:11.5px;color:var(--muted);margin-bottom:12px;line-height:1.6}
+table.diff{width:100%;border-collapse:collapse;font-size:10px}
+table.diff th{background:var(--surface3);padding:5px 7px;border:1px solid var(--border);text-align:left;font-size:10px;color:var(--muted);font-weight:600}
+table.diff th.active-dialect{color:var(--blue);border-bottom:2px solid var(--blue)}
+table.diff td{padding:4px 7px;border:1px solid var(--border);font-family:var(--mono);font-size:10px;vertical-align:top}
+table.diff td:first-child{color:var(--text);font-family:var(--sans);font-size:11px}
+table.diff td.hl{color:var(--blue);background:var(--blue-bg)}
+
+/* SQL Reference tab */
+.ref-section{margin-bottom:18px}
+.ref-section-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid var(--border)}
+.ref-row{display:flex;gap:8px;align-items:baseline;padding:4px 0;border-bottom:1px solid rgba(35,45,69,.5)}
+.ref-kw{font-family:var(--mono);font-size:10.5px;color:var(--blue);min-width:160px;flex-shrink:0}
+.ref-desc{font-size:11px;color:var(--muted);line-height:1.5}
+
+/* Right panel — editor + output split */
+.right{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.editor-hdr{background:var(--surface);border-bottom:1px solid var(--border);padding:6px 12px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.lang-tag{font-family:var(--mono);font-size:11px;color:var(--muted);display:flex;align-items:center;gap:5px}
+.lang-dot{width:7px;height:7px;border-radius:50%;background:var(--blue)}
+.editor-btns{display:flex;gap:6px}
+
+.editor-wrap{flex:1;position:relative;overflow:hidden;min-height:80px}
+#editor{width:100%;height:100%;background:var(--bg);color:var(--text);font-family:var(--mono);font-size:12px;line-height:1.75;border:none;outline:none;resize:none;padding:16px 16px 16px 48px;tab-size:2}
+.lnums{position:absolute;left:0;top:0;bottom:0;width:38px;background:var(--surface);border-right:1px solid var(--border);padding:16px 6px 16px 0;font-family:var(--mono);font-size:12px;line-height:1.75;color:var(--dim);text-align:right;pointer-events:none;overflow:hidden;white-space:pre;user-select:none}
+
+/* Output pane — always visible, resizable feel */
+.output-pane{flex-shrink:0;height:220px;border-top:2px solid var(--border2);background:var(--surface);display:flex;flex-direction:column;overflow:hidden}
+.output-hdr{display:flex;align-items:center;justify-content:space-between;padding:7px 12px;border-bottom:1px solid var(--border);flex-shrink:0}
+.output-title{font-size:11px;font-weight:600;display:flex;align-items:center;gap:7px;font-family:var(--mono)}
+.output-status{width:7px;height:7px;border-radius:50%;background:var(--dim)}
+.output-status.running{background:var(--blue);animation:pulse 1s infinite}
+.output-status.correct{background:var(--green);box-shadow:0 0 6px var(--green)}
+.output-status.partial{background:var(--amber)}
+.output-status.error{background:var(--red)}
+.output-body{flex:1;overflow-y:auto;padding:10px 12px;scrollbar-width:thin;scrollbar-color:var(--border2) transparent}
+.loading-bar{height:2px;background:linear-gradient(90deg,transparent,var(--blue),transparent);background-size:200% 100%;animation:shimmer 1s infinite;flex-shrink:0}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* Output content */
+.verdict-pill{font-size:11px;font-family:var(--mono);padding:2px 9px;border-radius:10px;border:1px solid}
+.vp-correct{background:var(--green-bg);color:var(--green);border-color:var(--green)}
+table.rt{border-collapse:collapse;font-size:11px;font-family:var(--mono);min-width:100%}
+table.rt th{background:var(--surface3);color:var(--blue);padding:4px 9px;border:1px solid var(--border);white-space:nowrap;font-size:10px}
+table.rt td{padding:3px 9px;border:1px solid var(--border);color:var(--text);white-space:nowrap}
+table.rt tr:nth-child(even) td{background:var(--surface2)}
+.rt-note{font-size:10px;color:var(--muted);margin-top:4px}
+.error-box{background:var(--red-bg);border:1px solid var(--red);border-radius:5px;padding:8px 11px;font-family:var(--mono);font-size:11px;color:var(--red)}
+.out-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;color:var(--muted)}
+.out-label.correct{color:var(--green)}
+.out-label.model{color:var(--purple)}
+.out-section{margin-bottom:12px}
+.model-code{background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:10px;font-family:var(--mono);font-size:11px;color:var(--text);white-space:pre-wrap;line-height:1.65}
+.hint-item{background:var(--amber-bg);border:1px solid rgba(245,166,35,.25);border-radius:5px;padding:7px 10px;font-size:11.5px;color:#d4a843;margin-bottom:5px;line-height:1.5}
+.hint-num{font-size:9.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--amber);margin-bottom:2px}
+.empty-output{color:var(--dim);font-size:12px;font-family:var(--mono);padding:8px 0}
+
+/* Bottom bar */
+.bottom-bar{background:var(--surface);border-top:1px solid var(--border);padding:7px 12px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.bottom-left{display:flex;gap:6px;align-items:center}
+.bottom-right{display:flex;gap:6px}
+
+/* Skeletons */
+.skel{background:linear-gradient(90deg,var(--surface2) 25%,var(--border) 50%,var(--surface2) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:4px}
+.sl{height:12px;margin-bottom:8px}
+.empty{padding:30px 16px;text-align:center;color:var(--muted);font-size:12.5px;line-height:1.7}
+.empty-icon{font-size:22px;margin-bottom:8px;opacity:.4}
+
+/* Difficulty info button + popover */
+.diff-info-btn{width:18px;height:18px;border-radius:50%;border:1px solid var(--border2);background:transparent;color:var(--muted);font-size:10px;font-weight:700;cursor:pointer;line-height:1;transition:all .15s;flex-shrink:0}
+.diff-info-btn:hover{border-color:var(--blue);color:var(--blue)}
+.diff-popover{display:none;position:absolute;top:52px;left:50%;transform:translateX(-50%);z-index:100;background:var(--surface2);border:1px solid var(--border2);border-radius:8px;padding:14px 16px;width:340px;box-shadow:0 8px 32px rgba(0,0,0,.5)}
+.diff-popover.open{display:block}
+.diff-pop-title{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.diff-pop-item{margin-bottom:12px}
+.diff-pop-item:last-child{margin-bottom:0}
+.diff-pop-label{font-size:11px;font-weight:600;font-family:var(--mono);margin-bottom:4px}
+.diff-pop-label.easy{color:var(--green)}
+.diff-pop-label.medium{color:var(--amber)}
+.diff-pop-label.hard{color:var(--red)}
+.diff-pop-desc{font-size:11.5px;color:var(--muted);line-height:1.6}
+
+/* SQL Reference bottom bar */
+.ref-bar{border-top:1px solid var(--border2);background:var(--surface);flex-shrink:0;display:flex;flex-direction:column;max-height:200px}
+.ref-bar-top{display:flex;align-items:center;gap:10px;padding:7px 14px;border-bottom:1px solid var(--border);flex-shrink:0}
+.ref-bar-label{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);white-space:nowrap}
+.ref-cat-select{flex:1;font-family:var(--sans);font-size:11px;background:var(--surface2);border:1px solid var(--border2);border-radius:5px;color:var(--text);padding:4px 7px;cursor:pointer;outline:none}
+.ref-cat-select:focus{border-color:var(--blue)}
+.ref-content{overflow-y:auto;padding:4px 14px 8px;scrollbar-width:thin;scrollbar-color:var(--border2) transparent}
+.ref-row{display:flex;gap:10px;align-items:baseline;padding:4px 0;border-bottom:1px solid rgba(35,45,69,.4)}
+.ref-row:last-child{border-bottom:none}
+.ref-kw{font-family:var(--mono);font-size:10.5px;color:var(--blue);min-width:150px;flex-shrink:0;line-height:1.5}
+.ref-desc{font-size:11px;color:var(--muted);line-height:1.5}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="logo">SQL<span>.practice</span></div>
+  <div class="sep"></div>
+  <select class="dialect-select" id="dialect-select" onchange="setDialect(this.value)">
+    <option value="tsql">T-SQL</option>
+    <option value="mysql">MySQL</option>
+    <option value="postgres">PostgreSQL</option>
+    <option value="sqlite">SQLite</option>
+    <option value="spark">Spark SQL</option>
+  </select>
+  <div class="sep"></div>
+  <div style="position:relative;display:flex;align-items:center;gap:5px">
+    <button class="diff-info-btn" onclick="toggleSqlDiff(event)" title="SQL dialect differences" style="border-radius:5px;width:auto;padding:3px 8px;font-size:11px;font-weight:500;font-family:var(--sans)">SQL Diff</button>
+    <div class="diff-popover" id="sql-diff-popover" style="top:34px;left:0;transform:none;width:560px;max-height:420px;overflow-y:auto"></div>
+  </div>
+  <div class="sep"></div>
+  <div class="diff-btns">
+    <button class="diff-btn active-easy" data-d="easy"   onclick="setDifficulty('easy')">Easy</button>
+    <button class="diff-btn"             data-d="medium" onclick="setDifficulty('medium')">Medium</button>
+    <button class="diff-btn"             data-d="hard"   onclick="setDifficulty('hard')">Hard</button>
+    <button class="diff-info-btn" onclick="toggleDiffInfo(event)" title="What do the difficulty levels mean?">?</button>
+  </div>
+  <div class="diff-popover" id="diff-popover">
+    <div class="diff-pop-title">Difficulty levels</div>
+    <div class="diff-pop-item">
+      <div class="diff-pop-label easy">Easy</div>
+      <div class="diff-pop-desc">One concept, 3&#8211;8 lines. Core SQL only &mdash; SELECT, WHERE, JOIN, GROUP BY, CASE. No CTEs or window functions.</div>
+    </div>
+    <div class="diff-pop-item">
+      <div class="diff-pop-label medium">Medium</div>
+      <div class="diff-pop-desc">Two or more concepts combined, 8&#8211;18 lines. Multi-table JOINs, conditional aggregation, subqueries, or a simple CTE. Equivalent to most interview problems.</div>
+    </div>
+    <div class="diff-pop-item">
+      <div class="diff-pop-label hard">Hard</div>
+      <div class="diff-pop-desc">CTEs and/or window functions required, 15&#8211;30 lines. DENSE_RANK, LAG/LEAD, running totals, recursive CTEs. Mid-to-senior level interview territory.</div>
+    </div>
+  </div>
+  <div class="sep"></div>
+  <div class="dataset-pill" id="dataset-pill">No dataset</div>
+  <div class="hdr-right">
+    <button class="btn btn-ghost" id="new-q-btn" onclick="newQuestion()" disabled>New question</button>
+    <button class="btn btn-ghost" id="refresh-btn" onclick="refreshDataset()">&#8635; New dataset</button>
+  </div>
+</div>
+
+<div class="main">
+  <!-- LEFT -->
+  <div class="left">
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab('problem')">Request</div>
+      <div class="tab" onclick="switchTab('schema')">Database</div>
+    </div>
+    <div class="panel active" id="tab-problem">
+      <div class="empty"><div class="empty-icon">&#9889;</div>Click <strong>New dataset</strong> to load a database and begin.</div>
+    </div>
+    <div class="panel" id="tab-schema">
+      <div class="empty">Load a dataset to see the schema.</div>
+    </div>
+    <!-- SQL Reference dropdown at bottom -->
+    <div class="ref-bar">
+      <div class="ref-bar-top">
+        <span class="ref-bar-label">SQL Reference</span>
+        <select class="ref-cat-select" id="ref-cat-select" onchange="renderRefCategory(this.value)">
+          <option value="">Select a category...</option>
+          <option value="querying">Querying data</option>
+          <option value="joins">Joins</option>
+          <option value="aggregation">Aggregation</option>
+          <option value="ctes">CTEs</option>
+          <option value="window">Window functions</option>
+          <option value="nulls">NULL handling</option>
+          <option value="case">CASE expressions</option>
+          <option value="strings">String functions</option>
+          <option value="dates">Date functions</option>
+          <option value="types">Type conversion</option>
+          <option value="sets">Set operations</option>
+          <option value="perf">Performance</option>
+        </select>
+      </div>
+      <div class="ref-content" id="ref-content"></div>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="right">
+    <div class="editor-hdr">
+      <div class="lang-tag"><div class="lang-dot"></div><span id="dialect-label">T-SQL</span></div>
+      <div class="editor-btns">
+        <button class="btn btn-ghost" onclick="clearEditor()">Clear</button>
+        <button class="btn btn-ghost" id="hint-btn" onclick="revealHint()" disabled>Hint (0)</button>
+        <button class="btn btn-teal"  id="run-btn"  onclick="runQuery()"   disabled>Run &#9654;</button>
+      </div>
+    </div>
+    <div class="editor-wrap">
+      <div class="lnums" id="lnums">1</div>
+      <textarea id="editor"
+        placeholder="-- Load a dataset to begin..."
+        spellcheck="false"
+        oninput="onEditorInput()"
+        onkeydown="handleTab(event)"
+      ></textarea>
+    </div>
+
+    <!-- Always-visible output pane -->
+    <div class="output-pane" id="output-pane">
+      <div id="loading-bar-wrap" style="display:none"><div class="loading-bar"></div></div>
+      <div class="output-hdr">
+        <div class="output-title">
+          <div class="output-status" id="out-status"></div>
+          <span id="out-title">Output</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span id="out-verdict"></span>
+        </div>
+      </div>
+      <div class="output-body" id="out-body">
+        <div class="empty-output">Run a query to see results here.</div>
+      </div>
+    </div>
+
+    <!-- Bottom bar -->
+    <div class="bottom-bar">
+      <div class="bottom-left">
+        <span id="out-rowcount" style="font-size:11px;color:var(--muted);font-family:var(--mono)"></span>
+      </div>
+      <div class="bottom-right">
+        <button class="btn btn-blue" id="next-btn" onclick="newQuestion()" style="display:none">Next question &#8594;</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = 'https://api.anthropic.com/v1/messages';
+const MODEL = 'claude-sonnet-4-20250514';
+
+let dataset = null;
+let question = null;
+let dialect = 'tsql';
+let difficulty = 'easy';
+let hints = [];
+let hintShown = 0;
+let qNum = 0;
+let isRunning = false, isGenerating = false;
+let lastCorrect = false;
+let usedTopics = [];
+
+const DIALECTS = { tsql:'T-SQL (SQL Server)', mysql:'MySQL', postgres:'PostgreSQL', sqlite:'SQLite', spark:'Spark SQL' };
+
+const DATASET_CONTEXTS = [
+  { industry:'Healthcare',         desc:'Regional hospital with admissions, billing and staff data' },
+  { industry:'Retail',             desc:'National retail chain with sales, inventory and customers' },
+  { industry:'SaaS',               desc:'B2B software company with subscriptions and usage events' },
+  { industry:'Financial Services', desc:'Investment firm with accounts, transactions and portfolios' },
+  { industry:'E-commerce',         desc:'Online marketplace with orders, products and sellers' },
+  { industry:'Human Resources',    desc:'Enterprise HR system with employees, payroll and reviews' },
+  { industry:'Supply Chain',       desc:'Logistics company with shipments, warehouses and vendors' },
+  { industry:'Telecom',            desc:'Telecom provider with customers, plans and usage data' },
+];
+
+const TOPICS = {
+  easy: [
+    'SELECT with WHERE and multiple conditions',
+    'INNER JOIN across two tables',
+    'LEFT JOIN to find unmatched rows',
+    'GROUP BY with COUNT and SUM',
+    'HAVING to filter aggregate results',
+    'COUNT DISTINCT',
+    'ORDER BY with multiple columns and direction',
+    'CASE expression for labeling rows',
+    'COALESCE or ISNULL for null handling',
+    'NULLIF for safe division',
+    'Date range filtering with BETWEEN',
+    'DATEDIFF for date arithmetic',
+    'String functions CONCAT LEN SUBSTRING',
+    'UNION ALL to stack two result sets',
+    'EXISTS or IN for existence check',
+    'Filtering with AND OR NOT conditions',
+    'Aggregate with MIN and MAX',
+    'Simple subquery in WHERE clause',
+    'TOP N rows with ORDER BY',
+  ],
+  medium: [
+    'Conditional aggregation SUM CASE WHEN',
+    'Multi-table JOIN across three tables',
+    'Self-join to compare rows in the same table',
+    'Derived table subquery in FROM clause',
+    'CASE inside an aggregate function',
+    'Date truncation and period grouping',
+    'PIVOT-style aggregation with CASE',
+    'Correlated subquery',
+    'LEFT JOIN anti-join with NULL filter',
+    'Multiple aggregates in one GROUP BY query',
+    'Subquery returning multiple rows with IN',
+    'UNION with different filters on same table',
+    'Conditional column output with CASE',
+    'Filtering on calculated aggregate with HAVING',
+  ],
+  hard: [
+    'ROW_NUMBER for deduplication per group',
+    'DENSE_RANK for Nth highest value per group',
+    'LAG to compare a row with the previous row',
+    'LEAD to look ahead in a time series',
+    'Running total with SUM OVER UNBOUNDED PRECEDING',
+    'Rolling average with ROWS BETWEEN N PRECEDING',
+    'PARTITION BY with COUNT or SUM',
+    'TOP N per group using ROW_NUMBER in CTE',
+    'Finding sequential gaps with LAG and DATEDIFF',
+    'FIRST_VALUE and LAST_VALUE in a window',
+    'Multiple chained CTEs',
+    'CTE with window function then outer filter',
+    'Cumulative percentage share with window',
+    'Recursive CTE for hierarchy traversal',
+    'RANK with ties across partitions',
+  ],
+};
+
+function pickTopic() {
+  const pool = TOPICS[difficulty] || TOPICS.easy;
+  const avail = pool.filter(function(t) { return !usedTopics.includes(t); });
+  const src = avail.length > 0 ? avail : pool;
+  const t = src[Math.floor(Math.random() * src.length)];
+  usedTopics.push(t);
+  if (usedTopics.length > Math.ceil(pool.length / 2)) usedTopics.shift();
+  return t;
+}
+
+async function callClaude(prompt, maxTokens) {
+  const r = await fetch(API, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ model: MODEL, max_tokens: maxTokens || 800,
+      messages: [{ role: 'user', content: prompt }] }),
+  });
+  if (!r.ok) throw new Error('API ' + r.status);
+  const d = await r.json();
+  if (d.stop_reason === 'max_tokens') throw new Error('Response truncated - try again.');
+  const raw = (d.content && d.content[0] && d.content[0].text) ? d.content[0].text : '';
+  const text = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/i, '').trim();
+  const objStart = text.indexOf('{'), arrStart = text.indexOf('[');
+  let jsonStart = -1;
+  if (objStart === -1 && arrStart === -1) throw new Error('No JSON in response.');
+  if (objStart === -1) jsonStart = arrStart;
+  else if (arrStart === -1) jsonStart = objStart;
+  else jsonStart = Math.min(objStart, arrStart);
+  const isArr = (arrStart !== -1 && (objStart === -1 || arrStart < objStart));
+  const jsonEnd = text.lastIndexOf(isArr ? ']' : '}');
+  if (jsonEnd < jsonStart) throw new Error('Malformed JSON.');
+  return JSON.parse(text.slice(jsonStart, jsonEnd + 1));
+}
+
+// ── Dataset generation (split into schema + per-table data) ──────────────────
+async function refreshDataset() {
+  if (isGenerating) return;
+  isGenerating = true;
+  lastCorrect = false;
+  setOutputEmpty();
+  hideNextBtn();
+  document.getElementById('refresh-btn').disabled = true;
+  document.getElementById('refresh-btn').textContent = 'Loading...';
+  document.getElementById('new-q-btn').disabled = true;
+  document.getElementById('run-btn').disabled = true;
+  document.getElementById('hint-btn').disabled = true;
+  document.getElementById('dataset-pill').textContent = 'Generating...';
+  showProblemSkeleton();
+  clearEditor(true);
+
+  const ctx = DATASET_CONTEXTS[Math.floor(Math.random() * DATASET_CONTEXTS.length)];
+
+  const schemaPrompt =
+    'Generate a SQL database schema for a ' + ctx.industry + ' company. Context: ' + ctx.desc + '\n' +
+    'Respond ONLY with valid JSON, no markdown:\n' +
+    '{"name":"Co Name","industry":"' + ctx.industry + '","description":"one sentence",' +
+    '"tables":[{"name":"tbl","description":"what it stores","columns":[{"name":"col","type":"INT or VARCHAR(50) or DATE or DECIMAL(10,2)","note":"PK or FK->othertable or empty"}]}]}\n' +
+    'Rules: exactly 3 tables, 4-5 columns each, snake_case, no rows.';
+
+  try {
+    const schema = await callClaude(schemaPrompt, 700);
+    schema.tables = schema.tables || [];
+
+    for (let i = 0; i < schema.tables.length; i++) {
+      const t = schema.tables[i];
+      const colList = t.columns.map(function(c) { return c.name + '(' + c.type + ')'; }).join(',');
+      var fkHint = '';
+      t.columns.forEach(function(c) {
+        if (c.note && c.note.indexOf('FK->') === 0) {
+          var refName = c.note.replace('FK->', '');
+          var refTable = schema.tables.find(function(x) { return x.name === refName; });
+          if (refTable && refTable.rows && refTable.rows.length) {
+            var refPk = (refTable.columns.find(function(rc) { return rc.note === 'PK'; }) || refTable.columns[0]).name;
+            fkHint += ' ' + c.name + ' must be one of: ' + refTable.rows.map(function(row) { return row[refPk]; }).join(',') + '.';
+          }
+        }
+      });
+      const dataPrompt = 'Generate exactly 5 sample rows for SQL table "' + t.name + '" columns: ' + colList + '.' + fkHint +
+        ' Respond ONLY with a JSON array of 5 objects. Short string values. Vary data. No markdown.';
+      try {
+        const rows = await callClaude(dataPrompt, 500);
+        t.rows = Array.isArray(rows) ? rows.slice(0, 5) : [];
+      } catch(e2) { t.rows = []; }
+    }
+
+    dataset = schema;
+    document.getElementById('dataset-pill').textContent = dataset.name;
+    renderSchema();
+    usedTopics = [];
+    await generateQuestion();
+  } catch (e) {
+    document.getElementById('tab-problem').innerHTML = '<div class="empty"><div class="empty-icon">&#9888;</div><div>Failed: ' + esc(e.message) + '</div><div style="margin-top:10px"><button class="btn btn-ghost" onclick="refreshDataset()">Try again</button></div></div>';
+    document.getElementById('dataset-pill').textContent = 'Error';
+  }
+
+  isGenerating = false;
+  document.getElementById('refresh-btn').disabled = false;
+  document.getElementById('refresh-btn').textContent = '\u21BB New dataset';
+}
+
+// ── Question generation ───────────────────────────────────────────────────────
+async function generateQuestion() {
+  const topic = pickTopic();
+  qNum++;
+  hints = [];
+  hintShown = 0;
+  updateHintBtn();
+  showProblemSkeleton();
+  clearEditor(true);
+  setOutputEmpty();
+  hideNextBtn();
+
+  const diffDesc = {
+    easy: 'EASY — single concept, 3-8 lines. ONLY use: SELECT, FROM, WHERE, JOIN (1 join max), GROUP BY, HAVING, ORDER BY, CASE, COALESCE, ISNULL, NULLIF, basic aggregates (COUNT SUM AVG MIN MAX), UNION ALL, EXISTS/IN, TOP. STRICTLY FORBIDDEN: CTEs, window functions (ROW_NUMBER RANK LAG LEAD OVER PARTITION), subqueries in FROM, self-joins, more than one JOIN.',
+    medium: 'MEDIUM — 2-3 concepts combined, 8-18 lines. May use: multiple JOINs, conditional aggregation (SUM CASE WHEN), subqueries in WHERE or FROM, UNION, self-join, CASE inside aggregates. STRICTLY FORBIDDEN: CTEs (WITH clause), all window functions (OVER, PARTITION BY, ROW_NUMBER, RANK, DENSE_RANK, LAG, LEAD, FIRST_VALUE, LAST_VALUE, NTILE).',
+    hard: 'HARD — 15-30 lines. MUST use at least one of: CTE (WITH clause), window function (ROW_NUMBER RANK DENSE_RANK LAG LEAD SUM OVER PARTITION BY), or both combined. These are the defining features of hard problems.',
+  }[difficulty];
+  const schemaDesc = dataset.tables.map(function(t) {
+    return t.name + ': ' + t.columns.map(function(c) { return c.name + ' ' + c.type; }).join(', ');
+  }).join(' | ');
+
+  const prompt =
+    'Generate a SQL business request. DB: ' + dataset.name + ' (' + dataset.industry + '). ' +
+    'Schema: ' + schemaDesc + '. Topic: ' + topic + '. Difficulty: ' + difficulty + ' (' + diffDesc + ').\n' +
+    'Respond ONLY with JSON:\n' +
+    '{"title":"4-7 word title","submitted_by":"Name, Title","summary":"one sentence business context",' +
+    '"requirements":["requirement referencing real column/table names","requirement 2","requirement 3"],' +
+    '"output_description":"one sentence on expected output columns",' +
+    '"hints":["vague nudge","more specific hint about approach","near-answer hint"]}\n' +
+    'Rules:\n' +
+    '- Requirements must reference actual column and table names from the schema\n' +
+    '- Frame as a real business need — do NOT mention SQL, CTEs, or window functions\n' +
+    '- The difficulty restriction is ABSOLUTE — do not add concepts beyond what is allowed for this difficulty\n' +
+    '- Easy: the correct answer must be solvable with a single SELECT statement and basic clauses only\n' +
+    '- Medium: may require subqueries or multiple aggregates but NO CTEs or window functions\n' +
+    '- Hard: the correct answer must require a CTE or window function to solve correctly';
+
+  try {
+    question = await callClaude(prompt, 700);
+    hints = question.hints || [];
+    hintShown = 0;
+    updateHintBtn();
+    renderProblem();
+    document.getElementById('run-btn').disabled = false;
+    document.getElementById('hint-btn').disabled = false;
+    document.getElementById('new-q-btn').disabled = false;
+  } catch (e) {
+    document.getElementById('tab-problem').innerHTML = '<div class="empty"><div>Failed to generate question.</div><button class="btn btn-ghost" style="margin-top:10px" onclick="newQuestion()">Retry</button></div>';
+  }
+}
+
+function newQuestion() {
+  if (!dataset || isGenerating || isRunning) return;
+  isGenerating = true;
+  document.getElementById('new-q-btn').disabled = true;
+  generateQuestion().finally(function() { isGenerating = false; document.getElementById('new-q-btn').disabled = false; });
+}
+
+// ── Run / evaluate query ──────────────────────────────────────────────────────
+async function runQuery() {
+  if (!question || !dataset || isRunning || isGenerating) return;
+  const sql = document.getElementById('editor').value.trim();
+  if (!sql) { setOutputMsg('Write a query first.'); return; }
+
+  isRunning = true;
+  document.getElementById('run-btn').disabled = true;
+  document.getElementById('run-btn').textContent = 'Running...';
+  document.getElementById('out-status').className = 'output-status running';
+  document.getElementById('out-title').textContent = 'Running...';
+  document.getElementById('out-verdict').innerHTML = '';
+  document.getElementById('out-body').innerHTML = '';
+  document.getElementById('out-rowcount').textContent = '';
+  document.getElementById('loading-bar-wrap').style.display = 'block';
+
+  // Compact data representation for faster prompt
+  const sampleData = dataset.tables.map(function(t) {
+    if (!t.rows || !t.rows.length) return t.name + ': (no rows)';
+    const cols = t.columns.map(function(c) { return c.name; });
+    const rows = t.rows.slice(0, 4).map(function(r) { return cols.map(function(c) { return r[c]; }).join('|'); });
+    return t.name + ' [' + cols.join('|') + ']\n' + rows.join('\n');
+  }).join('\n\n');
+
+  const schemaLine = dataset.tables.map(function(t) {
+    return t.name + '(' + t.columns.map(function(c) { return c.name; }).join(',') + ')';
+  }).join(' ');
+
+  const reqs = (question.requirements || []).join('; ');
+
+  const prompt =
+    'Simulate SQL execution. DB: ' + dataset.name + '. Dialect: ' + DIALECTS[dialect] + '.\n' +
+    'Schema: ' + schemaLine + '\nData:\n' + sampleData + '\n' +
+    'Task: ' + reqs + '\nExpected output: ' + (question.output_description || '') + '\n' +
+    'Query:\n' + sql + '\n\n' +
+    'Respond ONLY with JSON:\n' +
+    '{"verdict":"correct|partial|incorrect|error","is_acceptable":true,"error_message":null,' +
+    '"cols":["col1"],"rows":[[val1]],"row_note":null,' +
+    '"model_answer":"clean SQL here"}\n' +
+    'Rules: simulate against data above. cols+rows = actual output (max 5 rows). ' +
+    'is_acceptable=true only if query fully answers the task. model_answer uses ' + DIALECTS[dialect] + ' syntax.';
+
+  try {
+    const result = await callClaude(prompt, 900);
+    if (result.model_answer && question) question.model_answer_cache = result.model_answer;
+    if (result.is_acceptable) { lastCorrect = true; showNextBtn(); } else { lastCorrect = false; }
+    renderResult(result);
+  } catch (e) {
+    document.getElementById('out-status').className = 'output-status error';
+    document.getElementById('out-title').textContent = 'Error';
+    document.getElementById('out-body').innerHTML = '<div class="error-box">' + esc(e.message) + '</div>';
+  }
+
+  isRunning = false;
+  document.getElementById('loading-bar-wrap').style.display = 'none';
+  document.getElementById('run-btn').disabled = false;
+  document.getElementById('run-btn').textContent = lastCorrect ? '\u2713 Correct' : 'Run \u25B6';
+  if (lastCorrect) document.getElementById('run-btn').className = 'btn btn-green';
+}
+
+// ── Hint reveal ───────────────────────────────────────────────────────────────
+function revealHint() {
+  if (!hints.length || isRunning) return;
+  if (hintShown > hints.length) return;
+
+  document.getElementById('out-status').className = 'output-status partial';
+  document.getElementById('out-title').textContent = 'Hints';
+  document.getElementById('out-verdict').innerHTML = '';
+
+  let html = '';
+  const show = Math.min(hintShown + 1, hints.length);
+  for (let i = 0; i < show; i++) {
+    html += '<div class="hint-item"><div class="hint-num">Hint ' + (i+1) + ' of ' + hints.length + '</div>' + esc(hints[i]) + '</div>';
+  }
+  hintShown++;
+
+  if (hintShown >= hints.length) {
+    if (question && question.model_answer_cache) {
+      html += buildModelAnswerHtml(question.model_answer_cache);
+    } else {
+      html += '<div style="margin-top:10px"><button class="btn btn-ghost" style="font-size:11px;width:100%" onclick="showModelAnswer()">Show model answer</button></div>';
+    }
+  }
+
+  document.getElementById('out-body').innerHTML = html;
+  updateHintBtn();
+}
+
+function showModelAnswer() {
+  if (!question) return;
+  const body = document.getElementById('out-body');
+  const btnDiv = body.querySelector('button[onclick="showModelAnswer()"]');
+  if (btnDiv && btnDiv.parentNode) btnDiv.parentNode.remove();
+  if (question.model_answer_cache) {
+    body.insertAdjacentHTML('beforeend', buildModelAnswerHtml(question.model_answer_cache));
+  } else {
+    body.insertAdjacentHTML('beforeend', '<div style="color:var(--muted);font-size:11px;margin-top:8px">Run your query first to generate a model answer.</div>');
+  }
+}
+
+function buildModelAnswerHtml(sql) {
+  return '<div class="out-section" style="margin-top:10px"><div class="out-label model">Model answer</div><div class="model-code">' + esc(sql) + '</div></div>';
+}
+
+function updateHintBtn() {
+  const btn = document.getElementById('hint-btn');
+  if (!hints.length) { btn.textContent = 'Hint (0)'; btn.disabled = true; return; }
+  const rem = hints.length - hintShown;
+  btn.textContent = rem > 0 ? 'Hint (' + rem + ')' : 'No more hints';
+  btn.disabled = rem <= 0;
+}
+
+// ── Render functions ──────────────────────────────────────────────────────────
+function renderProblem() {
+  if (!question) return;
+  const reqs = (question.requirements || []).map(function(r) { return '<li>' + esc(r) + '</li>'; }).join('');
+  document.getElementById('tab-problem').innerHTML =
+    '<div class="req-from">Request #' + qNum + '</div>' +
+    '<div class="req-title">' + esc(question.title) + '</div>' +
+    '<div class="req-summary">' + esc(question.summary || '') + '</div>' +
+    '<ul class="req-list">' + reqs + '</ul>' +
+    '<div class="req-divider"></div>' +
+    '<div class="req-submitter"><div>Submitted by</div><span>' + esc(question.submitted_by) + '</span></div>';
+}
+
+function renderResult(r) {
+  const isError = r.verdict === 'error';
+  const isCorrect = r.is_acceptable;
+  document.getElementById('out-status').className = 'output-status ' + (isError ? 'error' : isCorrect ? 'correct' : 'partial');
+  document.getElementById('out-title').textContent = isError ? 'Error' : isCorrect ? 'Correct' : 'Output';
+  document.getElementById('out-verdict').innerHTML = isCorrect ? '<span class="verdict-pill vp-correct">Accepted</span>' : '';
+
+  let html = '';
+  if (r.error_message) {
+    html += '<div class="out-section"><div class="error-box">' + esc(r.error_message) + '</div></div>';
+  }
+  const cols = r.cols || r.simulated_columns;
+  const rows = r.rows || r.simulated_rows;
+  if (cols && cols.length && rows && rows.length) {
+    html += '<div class="out-section"><div class="result-table-wrap"><table class="rt"><thead><tr>';
+    cols.forEach(function(c) { html += '<th>' + esc(String(c)) + '</th>'; });
+    html += '</tr></thead><tbody>';
+    rows.forEach(function(row) {
+      html += '<tr>';
+      (Array.isArray(row) ? row : Object.values(row)).forEach(function(v) {
+        html += '<td>' + (v === null || v === undefined ? '<span style="color:var(--dim)">NULL</span>' : esc(String(v))) + '</td>';
+      });
+      html += '</tr>';
+    });
+    html += '</tbody></table></div>';
+    if (r.row_note) html += '<div class="rt-note">' + esc(r.row_note) + '</div>';
+    document.getElementById('out-rowcount').textContent = rows.length + ' row' + (rows.length !== 1 ? 's' : '');
+    html += '</div>';
+  }
+  if (isCorrect && r.model_answer) {
+    html += buildModelAnswerHtml(r.model_answer);
+  }
+  document.getElementById('out-body').innerHTML = html;
+}
+
+function renderSchema() {
+  if (!dataset) return;
+  let html = '<div style="font-size:11.5px;color:var(--muted);margin-bottom:12px;line-height:1.6"><b style="color:var(--text)">' + esc(dataset.name) + '</b> &mdash; ' + esc(dataset.description) + '</div>';
+  dataset.tables.forEach(function(t) {
+    html += '<div class="schema-tbl-name">' + esc(t.name) + '</div>';
+    html += '<div class="schema-tbl-desc">' + esc(t.description) + '</div>';
+    html += '<table class="st"><thead><tr><th>Column</th><th>Type</th><th>Note</th></tr></thead><tbody>';
+    t.columns.forEach(function(c) {
+      const pk = c.note === 'PK';
+      html += '<tr><td class="' + (pk ? 'col-pk' : '') + '">' + esc(c.name) + (pk ? ' &#128273;' : '') + '</td><td class="col-type">' + esc(c.type) + '</td><td style="color:var(--muted);font-size:10px">' + esc(c.note || '') + '</td></tr>';
+    });
+    html += '</tbody></table>';
+    if (t.rows && t.rows.length) {
+      const cols = t.columns.map(function(c) { return c.name; });
+      html += '<div class="sample-label">Sample data</div><div class="result-table-wrap"><table class="sd"><thead><tr>';
+      cols.forEach(function(c) { html += '<th>' + esc(c) + '</th>'; });
+      html += '</tr></thead><tbody>';
+      t.rows.forEach(function(row) {
+        html += '<tr>';
+        cols.forEach(function(c) { html += '<td>' + (row[c] === null || row[c] === undefined ? '<span style="color:var(--dim)">NULL</span>' : esc(String(row[c]))) + '</td>'; });
+        html += '</tr>';
+      });
+      html += '</tbody></table></div>';
+    }
+  });
+  document.getElementById('tab-schema').innerHTML = html;
+}
+
+function renderDiffTab() {
+  // Reset popover so it re-renders with updated dialect on next open
+  const pop = document.getElementById('sql-diff-popover');
+  if (pop) pop.innerHTML = '';
+}
+
+const REF_DATA = {
+  querying: [
+    ['SELECT col1, col2', 'Return specific columns'],
+    ['SELECT DISTINCT col', 'Return unique values only'],
+    ['SELECT TOP n', 'First n rows (T-SQL) — use LIMIT n elsewhere'],
+    ['WHERE condition', 'Filter rows before grouping — cannot use SELECT aliases here'],
+    ['AND / OR / NOT', 'Combine conditions — AND binds tighter than OR'],
+    ['BETWEEN a AND b', 'Inclusive range — same as >= a AND <= b'],
+    ['IN (a, b, c)', 'Match any value in a list or subquery'],
+    ["LIKE 'val%'", "Pattern match — % = any chars, _ = one char"],
+    ['IS NULL / IS NOT NULL', 'Null check — never use = NULL'],
+    ['ORDER BY col DESC', 'Sort — only clause that can reference SELECT aliases'],
+    ['OFFSET n ROWS FETCH NEXT m ROWS ONLY', 'Pagination — requires ORDER BY'],
+  ],
+  joins: [
+    ['INNER JOIN ... ON', 'Rows with matches in both tables'],
+    ['LEFT JOIN ... ON', 'All left rows, NULLs where no right match'],
+    ['RIGHT JOIN ... ON', 'All right rows, NULLs where no left match'],
+    ['FULL OUTER JOIN', 'All rows from both sides, NULLs where no match'],
+    ['CROSS JOIN', 'Every row × every row (cartesian product)'],
+    ['LEFT JOIN ... WHERE b.id IS NULL', 'Anti-join — rows in A with no match in B'],
+    ['SELF JOIN', 'Table joined to itself using two aliases'],
+    ['CROSS APPLY', 'Row-level subquery per row — T-SQL only'],
+    ['OUTER APPLY', 'Like LEFT version of CROSS APPLY — T-SQL only'],
+  ],
+  aggregation: [
+    ['COUNT(*) / COUNT(col)', 'Count rows / count non-NULL values only'],
+    ['COUNT(DISTINCT col)', 'Count unique non-NULL values'],
+    ['SUM / AVG / MIN / MAX', 'Standard aggregates — all ignore NULLs'],
+    ['GROUP BY col', 'Collapse rows into groups — every non-aggregate SELECT col must appear here'],
+    ['HAVING condition', 'Filter groups after aggregation — WHERE cannot reference aggregates'],
+    ['SUM(CASE WHEN x THEN 1 ELSE 0 END)', 'Conditional count — most common interview pattern'],
+    ['AVG(CASE WHEN x THEN col END)', 'Average only matching rows — omit ELSE to exclude NULLs'],
+    ["STRING_AGG(col, ',')", "Concatenate values within a group (SQL Server 2017+)"],
+  ],
+  ctes: [
+    ['WITH name AS ( query )', 'Named temporary result — lives only for this query'],
+    [', name2 AS ( query )', 'Chain a second CTE — comma-separated, no extra WITH'],
+    ['CTE references earlier CTE', 'Each CTE can reference any CTE defined above it'],
+    ['Cannot filter on window fn in WHERE', 'Window fns run during SELECT — wrap in CTE, filter outside'],
+    ['Recursive: anchor UNION ALL recursive', 'Base case + self-referencing member — for hierarchies'],
+    ['OPTION (MAXRECURSION n)', 'Cap recursion depth — default 100, 0 = unlimited'],
+  ],
+  window: [
+    ['fn() OVER (PARTITION BY col ORDER BY col)', 'Define the window — all three sub-clauses are optional'],
+    ['PARTITION BY col', 'Divide into groups — function resets per group'],
+    ['ORDER BY col inside OVER()', 'Define row sequence within partition — required for ranking/offset'],
+    ['ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW', 'Default frame for running totals'],
+    ['ROWS BETWEEN 2 PRECEDING AND CURRENT ROW', 'Rolling N-period frame'],
+    ['ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING', 'Full partition frame — needed for LAST_VALUE'],
+    ['ROW_NUMBER()', 'Unique sequential number — no ties'],
+    ['RANK()', 'Ties share rank, gaps after (1,1,3,4)'],
+    ['DENSE_RANK()', 'Ties share rank, no gaps (1,1,2,3) — use for Nth highest'],
+    ['NTILE(n)', 'Divide rows into n equal buckets'],
+    ['LAG(col, n, default)', 'Value n rows before current — NULL at partition start'],
+    ['LEAD(col, n, default)', 'Value n rows after current — NULL at partition end'],
+    ['FIRST_VALUE(col)', 'First value in window'],
+    ['LAST_VALUE(col)', 'Last value — needs UNBOUNDED FOLLOWING frame to work correctly'],
+    ['SUM(col) OVER (...)', 'Running or windowed sum'],
+    ['PERCENTILE_CONT(0.5) WITHIN GROUP (...) OVER (...)', 'Median per partition'],
+  ],
+  nulls: [
+    ['IS NULL / IS NOT NULL', 'Only correct way to check for NULL — = NULL always false'],
+    ['COALESCE(a, b, c)', 'First non-NULL in list — ANSI standard, use for Fabric portability'],
+    ['ISNULL(a, b)', 'Replace NULL with fallback — SQL Server only'],
+    ['NULLIF(a, b)', 'Returns NULL if a = b — use for divide-by-zero: val / NULLIF(col, 0)'],
+    ['IIF(cond, a, b)', 'Two-branch ternary — use CASE for anything more complex'],
+    ['NULL in aggregates', 'SUM/AVG/COUNT(col) ignore NULLs — COUNT(*) includes them'],
+    ['NULL propagation', 'Any arithmetic with NULL returns NULL — guard with COALESCE'],
+  ],
+  case: [
+    ['CASE WHEN cond THEN val ... ELSE val END', 'Searched CASE — any condition type, evaluated left to right'],
+    ['CASE col WHEN val THEN res END', 'Simple CASE — equality checks only'],
+    ['ELSE is optional but always include it', 'Without ELSE, unmatched rows return NULL silently'],
+    ['CASE inside SUM/COUNT', 'Conditional aggregation — the most common interview pattern'],
+    ['CASE inside ORDER BY', 'Custom sort logic — e.g. put a specific value first'],
+    ['Most specific WHEN goes first', 'SQL evaluates top to bottom and returns at first match'],
+  ],
+  strings: [
+    ['LEN(col)', 'Character length'],
+    ['LEFT(col, n) / RIGHT(col, n)', 'Extract n characters from left or right'],
+    ['SUBSTRING(col, start, len)', 'Extract substring from position'],
+    ['UPPER(col) / LOWER(col)', 'Change case'],
+    ['TRIM(col) / LTRIM / RTRIM', 'Remove whitespace'],
+    ["CONCAT(a, b)", "Concatenate — handles NULLs better than a + b"],
+    ["REPLACE(col, old, new)", "Replace all occurrences of a substring"],
+    ["CHARINDEX(search, col)", "Position of substring — 0 if not found"],
+    ["FORMAT(val, \'pattern\')", 'Format numbers and dates as strings'],
+  ],
+  dates: [
+    ['GETDATE() / SYSDATETIME()', 'Current datetime — SYSDATETIME has higher precision'],
+    ['CAST(GETDATE() AS DATE)', 'Date only — strips time component'],
+    ['DATEDIFF(unit, start, end)', 'Difference in given unit (day, month, year, hour, etc.)'],
+    ['DATEADD(unit, n, date)', 'Add or subtract time — use negative n to go back'],
+    ['YEAR(col) / MONTH(col) / DAY(col)', 'Extract date parts'],
+    ['DATEPART(weekday, col)', 'Numeric day of week — 1=Sunday in T-SQL'],
+    ['EOMONTH(date)', 'Last day of the month'],
+    ["FORMAT(date, 'yyyy-MM-dd')", "Format date as string"],
+    ["DATEFROMPARTS(y, m, d)", "Build a date from parts \u2014 useful for period grouping"],
+  ],
+  types: [
+    ['CAST(col AS INT)', 'Convert type — error on failure'],
+    ['CAST(col AS FLOAT)', 'Convert to decimal — use before division to avoid truncation'],
+    ['CAST(col AS VARCHAR(n))', 'Convert to string'],
+    ['CAST(col AS DATE)', 'Convert to date'],
+    ["TRY_CAST(col AS INT)", "Safe convert — returns NULL on failure instead of error"],
+    ["CAST(5 AS FLOAT) / 2 = 2.5", "Integer division truncates — always cast first for decimal result"],
+    ['Implicit conversion in WHERE', 'Avoid: WHERE varchar_col = 123 prevents index seek — match types'],
+  ],
+  sets: [
+    ['UNION', 'Combine results and remove duplicates — slower due to dedup step'],
+    ['UNION ALL', 'Combine and keep all rows — always prefer unless dedup is needed'],
+    ['INTERSECT', 'Rows that appear in both result sets'],
+    ['EXCEPT', 'Rows in first set that do not appear in second'],
+    ['Column count and types must match', 'All set operations require the same number of columns in same order'],
+  ],
+  perf: [
+    ['Index Seek', 'Good — direct jump to rows using index'],
+    ['Index Scan', 'Watch — reads entire index'],
+    ['Table Scan', 'Flag — no index, reads every row — add an index'],
+    ['Key Lookup', 'Flag — index found row but fetched extra cols from clustered index — fix with INCLUDE columns'],
+    ['Hash Match', 'Watch — large unsorted join or aggregate — risk of memory spill to tempdb'],
+    ['Sort operator', 'Watch — explicit re-sort — often indicates a missing index'],
+    ['SELECT *', 'Avoid — fetches unused columns, prevents covering indexes'],
+    ['YEAR(col) = 2024 in WHERE', 'Avoid — wrapping indexed col in function prevents seek — use BETWEEN'],
+    ['varchar_col = 123', 'Avoid — implicit type conversion casts every row, kills index'],
+    ['CURSOR / WHILE loops', 'Avoid in production — row-by-row is dramatically slower than set-based SQL'],
+    ['OR in JOIN condition', 'Avoid — prevents merge join — rewrite as UNION of two conditions'],
+    ['UPDATE STATISTICS table', 'Refresh optimizer statistics — fixes bad estimated vs actual row counts'],
+  ],
+};
+
+function renderRefCategory(cat) {
+  const content = document.getElementById('ref-content');
+  if (!cat) { content.innerHTML = ''; return; }
+  const rows = REF_DATA[cat];
+  if (!rows) { content.innerHTML = ''; return; }
+  let html = '';
+  rows.forEach(function(row) {
+    html += '<div class="ref-row"><div class="ref-kw">' + esc(row[0]) + '</div><div class="ref-desc">' + esc(row[1]) + '</div></div>';
+  });
+  content.innerHTML = html;
+}
+
+function renderRefTab() { /* no-op — reference is now in the bottom bar dropdown */ }
+
+
+// ── UI helpers ────────────────────────────────────────────────────────────────
+function setDifficulty(d) {
+  difficulty = d;
+  document.querySelectorAll('.diff-btn').forEach(function(b) {
+    b.className = 'diff-btn' + (b.dataset.d === d ? ' active-' + d : '');
+  });
+}
+
+function setDialect(val) {
+  dialect = val;
+  document.getElementById('dialect-label').textContent = DIALECTS[val] || val;
+  renderDiffTab();
+}
+
+function switchTab(t) {
+  const names = ['problem','schema'];
+  document.querySelectorAll('.tab').forEach(function(el, i) { el.classList.toggle('active', names[i] === t); });
+  document.querySelectorAll('.panel').forEach(function(p) { p.classList.remove('active'); });
+  document.getElementById('tab-' + t).classList.add('active');
+}
+
+function showProblemSkeleton() {
+  document.getElementById('tab-problem').innerHTML =
+    '<div class="skel sl" style="width:35%;height:10px;margin-bottom:10px"></div>' +
+    '<div class="skel sl" style="width:72%;height:18px;margin-bottom:12px"></div>' +
+    '<div class="skel sl" style="width:100%"></div>' +
+    '<div class="skel sl" style="width:90%"></div>' +
+    '<div class="skel sl" style="width:95%;margin-bottom:14px"></div>' +
+    '<div class="skel sl" style="width:100%"></div>' +
+    '<div class="skel sl" style="width:80%"></div>' +
+    '<div class="skel sl" style="width:88%"></div>';
+}
+
+function setOutputEmpty() {
+  document.getElementById('out-status').className = 'output-status';
+  document.getElementById('out-title').textContent = 'Output';
+  document.getElementById('out-verdict').innerHTML = '';
+  document.getElementById('out-body').innerHTML = '<div class="empty-output">Run a query to see results here.</div>';
+  document.getElementById('out-rowcount').textContent = '';
+}
+
+function setOutputMsg(msg) {
+  document.getElementById('out-body').innerHTML = '<div class="empty-output">' + esc(msg) + '</div>';
+}
+
+function clearEditor(full) {
+  document.getElementById('editor').value = '';
+  updateLineNumbers();
+  if (!full) return;
+  document.getElementById('run-btn').className = 'btn btn-teal';
+  document.getElementById('run-btn').textContent = 'Run \u25B6';
+  lastCorrect = false;
+}
+
+function showNextBtn() { document.getElementById('next-btn').style.display = 'inline-flex'; }
+function hideNextBtn() { document.getElementById('next-btn').style.display = 'none'; }
+
+function onEditorInput() {
+  updateLineNumbers();
+  if (lastCorrect) {
+    lastCorrect = false;
+    document.getElementById('run-btn').className = 'btn btn-teal';
+    document.getElementById('run-btn').textContent = 'Run \u25B6';
+    hideNextBtn();
+  }
+}
+
+function updateLineNumbers() {
+  const n = document.getElementById('editor').value.split('\n').length;
+  document.getElementById('lnums').textContent = Array.from({length:n},function(_,i){return i+1;}).join('\n');
+}
+
+function handleTab(e) {
+  if (e.key === 'Tab') {
+    e.preventDefault();
+    const el = e.target, s = el.selectionStart, end = el.selectionEnd;
+    el.value = el.value.substring(0,s) + '  ' + el.value.substring(end);
+    el.selectionStart = el.selectionEnd = s + 2;
+    updateLineNumbers();
+  }
+}
+
+function esc(s) {
+  if (typeof s !== 'string') return (s === null || s === undefined) ? '' : String(s);
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function toggleSqlDiff(e) {
+  e.stopPropagation();
+  const pop = document.getElementById('sql-diff-popover');
+  if (!pop.innerHTML) renderDiffPopover();
+  pop.classList.toggle('open');
+  if (pop.classList.contains('open')) {
+    document.addEventListener('click', function closeSqlDiff() {
+      pop.classList.remove('open');
+      document.removeEventListener('click', closeSqlDiff);
+    });
+  }
+}
+
+function renderDiffPopover() {
+  const pop = document.getElementById('sql-diff-popover');
+  pop.innerHTML = '<div style="margin-bottom:10px;font-size:11px;color:var(--muted)">Your dialect (<strong style="color:var(--blue)">' + DIALECTS[dialect] + '</strong>) is highlighted.</div>';
+  const rows = [
+    ["Limit rows","TOP n","LIMIT n","LIMIT n","LIMIT n","LIMIT n"],
+    ["Limit + offset","OFFSET n ROWS FETCH NEXT m ROWS ONLY","LIMIT m OFFSET n","LIMIT m OFFSET n","LIMIT m OFFSET n","LIMIT m OFFSET n"],
+    ["Current datetime","GETDATE()","NOW()","NOW()","datetime('now')","CURRENT_TIMESTAMP"],
+    ["Date diff","DATEDIFF(unit,a,b)","DATEDIFF(a,b)","DATE_PART('day',b-a)","julianday(b)-julianday(a)","DATEDIFF(a,b)"],
+    ["Add to date","DATEADD(unit,n,d)","DATE_ADD(d,INTERVAL n u)","d + INTERVAL 'n u'","datetime(d,'+n days')","DATE_ADD(d,n)"],
+    ["Replace NULL","ISNULL(a,b)","IFNULL(a,b)","COALESCE(a,b)","IFNULL(a,b)","COALESCE(a,b)"],
+    ["Concat","a + b / CONCAT()","CONCAT(a,b)","a || b","a || b","CONCAT(a,b)"],
+    ["Auto-increment","IDENTITY(1,1)","AUTO_INCREMENT","SERIAL","AUTOINCREMENT","GENERATED ALWAYS AS IDENTITY"],
+    ["Upsert","MERGE","INSERT...ON DUPLICATE KEY","INSERT...ON CONFLICT","INSERT OR REPLACE","MERGE"],
+    ["Regex","LIKE only","REGEXP","~ / SIMILAR TO","REGEXP","RLIKE"],
+    ["JSON","FOR JSON / OPENJSON","JSON_EXTRACT()","-> / ->> / jsonb","json_extract()","GET_JSON_OBJECT()"],
+    ["Case sensitive","Default CI","Configurable","Case sensitive","Case sensitive","Configurable"],
+  ];
+  const dialects = ['tsql','mysql','postgres','sqlite','spark'];
+  const headers = ['T-SQL','MySQL','PostgreSQL','SQLite','Spark SQL'];
+  const dIdx = dialects.indexOf(dialect);
+  let html = '<table class="diff"><thead><tr><th>Feature</th>';
+  headers.forEach(function(h, i) { html += '<th class="' + (i === dIdx ? 'active-dialect' : '') + '">' + h + '</th>'; });
+  html += '</tr></thead><tbody>';
+  rows.forEach(function(row) {
+    html += '<tr><td>' + row[0] + '</td>';
+    dialects.forEach(function(d, i) { html += '<td class="' + (i === dIdx ? 'hl' : '') + '">' + esc(row[i+1]) + '</td>'; });
+    html += '</tr>';
+  });
+  html += '</tbody></table>';
+  pop.innerHTML += html;
+}
+
+function toggleDiffInfo(e) {
+  e.stopPropagation();
+  const pop = document.getElementById('diff-popover');
+  pop.classList.toggle('open');
+  if (pop.classList.contains('open')) {
+    document.addEventListener('click', closeDiffInfo, { once: true });
+  }
+}
+function closeDiffInfo() {
+  document.getElementById('diff-popover').classList.remove('open');
+}
+
+// Init
+updateLineNumbers();
+renderDiffTab();
+</script>
+</body>
+</html>
