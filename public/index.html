@@ -790,7 +790,7 @@ async function runQuery() {
     'model_answer uses ' + DIALECTS[dialect] + ' syntax with real col/table names.';
 
   try {
-    const result = await callClaude(prompt, 1200);
+    const result = await callClaude(prompt, 2400);
     if (result.model_answer && question) question.model_answer_cache = result.model_answer;
     lastCorrect = !!result.is_acceptable;
     if (lastCorrect) showNextBtn();
